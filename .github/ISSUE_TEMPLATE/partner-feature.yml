@@ -1,0 +1,81 @@
+name: Карточка функционала (партнёры)
+description: Предложите функцию для платформы «Эхо». Карточка попадёт в общий реестр.
+title: "[Партнёр] "
+labels: ["partner-feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Спасибо, что помогаете развивать «Эхо»! Карточка **публичная**: не указывайте телефоны, личную почту и закрытую информацию.
+        Все карточки собираются в [реестр](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/08-partners/feature-cards.md).
+  - type: input
+    id: org
+    attributes:
+      label: Организация / автор
+      placeholder: "Киностудия «…», режиссёр Имя Фамилия"
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: Название функции
+      placeholder: "Например: подборка фильмов студии на главной"
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Какую проблему решает
+    validations:
+      required: true
+  - type: dropdown
+    id: role
+    attributes:
+      label: Для кого
+      multiple: true
+      options:
+        - Зритель
+        - Автор
+        - Медиа
+        - Партнёр
+    validations:
+      required: true
+  - type: textarea
+    id: scenario
+    attributes:
+      label: Как это должно работать
+      description: Сценарий по шагам — что человек делает и что видит.
+      value: |
+        1. 
+        2. 
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: Ожидаемый результат
+      description: Что изменится для вас или ваших зрителей.
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Важность для вас
+      options:
+        - Критично
+        - Важно
+        - Желательно
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Пример или референс
+      description: Ссылка, скриншот, похожая функция на другом сайте.
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Подтверждение
+      options:
+        - label: Я понимаю, что карточка публичная и её рассмотрение не гарантирует реализацию.
+          required: true

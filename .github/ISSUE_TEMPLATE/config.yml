@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Wiki проекта
+    url: https://github.com/SaTayouNy/EchoWeb/tree/main/docs
+    about: Требования, регламенты, архитектура и планы.
+  - name: Страница для партнёров
+    url: https://github.com/SaTayouNy/EchoWeb/blob/main/docs/08-partners/README.md
+    about: Как работать с «Эхо» и что прислать о фильме.

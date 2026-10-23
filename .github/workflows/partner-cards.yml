@@ -1,0 +1,39 @@
+name: Реестр карточек партнёров
+
+on:
+  issues:
+    types: [opened, edited, labeled, unlabeled, closed, reopened, deleted]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+concurrency:
+  group: partner-cards
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.issue.labels.*.name, 'partner-feature') || github.event.action == 'unlabeled' || github.event.action == 'deleted'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Получить карточки
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue list --repo "$GITHUB_REPOSITORY" --label partner-feature --state all --limit 1000 \
+            --json number,title,body,labels,state,createdAt,url > "$RUNNER_TEMP/issues.json"
+      - name: Собрать реестр
+        run: node .github/scripts/partner-cards.mjs "$RUNNER_TEMP/issues.json" docs/08-partners/feature-cards.md
+      - name: Сохранить
+        run: |
+          if git diff --quiet; then echo "Без изменений"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/08-partners/feature-cards.md
+          git commit -m "docs: обновлён реестр карточек партнёров"
+          git push

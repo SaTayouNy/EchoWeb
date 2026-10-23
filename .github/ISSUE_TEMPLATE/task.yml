@@ -1,0 +1,40 @@
+name: Задача (ТЗ)
+description: Задача для команды в спринте
+title: "[Задача] "
+body:
+  - type: markdown
+    attributes:
+      value: Оформление — по [регламенту задач](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/02-management/task-workflow.md). Оценку, приоритет и направление укажите метками.
+  - type: textarea
+    id: result
+    attributes:
+      label: Желаемый результат
+      description: Что должно получиться, с точки зрения пользователя или команды.
+    validations:
+      required: true
+  - type: textarea
+    id: requirements
+    attributes:
+      label: Список требований
+      description: Проверяемые пункты. По ним задача принимается.
+      value: |
+        - [ ] 
+    validations:
+      required: true
+  - type: textarea
+    id: format
+    attributes:
+      label: Формат результата
+      description: PR, документ, скриншоты, отчёт…
+    validations:
+      required: true
+  - type: input
+    id: deadline
+    attributes:
+      label: Срок
+      placeholder: ДД.ММ.ГГГГ
+  - type: textarea
+    id: links
+    attributes:
+      label: Ссылки
+      description: Страницы wiki, макеты, связанные задачи.

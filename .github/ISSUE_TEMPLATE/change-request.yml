@@ -1,0 +1,38 @@
+name: Запрос на изменение
+description: Изменение требований, сроков, состава работ или интерфейса
+title: "[Изменение] "
+labels: ["запрос на изменение"]
+body:
+  - type: markdown
+    attributes:
+      value: Порядок рассмотрения — в [регламенте изменений](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/02-management/change-management.md). До конца ноября 2026 функционал не расширяется.
+  - type: textarea
+    id: what
+    attributes:
+      label: Что изменить
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Зачем
+      description: Какую проблему решает, что будет, если не менять.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Влияние
+      description: Сроки, трудозатраты, затронутые части продукта и документы.
+    validations:
+      required: true
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: Срочность
+      options:
+        - До релиза
+        - После релиза
+        - В следующем этапе
+    validations:
+      required: true

@@ -1,0 +1,44 @@
+name: Баг
+description: Что-то работает не так, как описано в требованиях
+title: "[Баг] "
+labels: ["баг"]
+body:
+  - type: textarea
+    id: steps
+    attributes:
+      label: Шаги воспроизведения
+      value: |
+        1. 
+        2. 
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Ожидаемый результат
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Фактический результат
+      description: Приложите скриншот или видео.
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Окружение
+      placeholder: "Chrome 130, 1440×900, staging"
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Критичность
+      options:
+        - Блокирует релиз
+        - Мешает сценарию
+        - Косметика
+    validations:
+      required: true

@@ -1,4 +1,18 @@
-# Эхо — основной сайт (v10.30)
+# Эхо
+
+Платформа для осмысленных рецензий на кино: зрители оценивают фильмы по параметрам качества и впечатлению и пишут рецензии, авторы фильмов отвечают в кабинете **Эхо Studio**. Запуск — **1 ноября 2026**.
+
+| | |
+|---|---|
+| 📚 **[Wiki проекта](docs/README.md)** | Требования, регламенты, архитектура, метрики, спринты |
+| 🛠 **[Для разработчиков](docs/04-development/README.md)** · [CONTRIBUTING](CONTRIBUTING.md) | Запуск фронта и бэкенда, ветки, pull request |
+| 🤝 **[Для партнёров](docs/08-partners/README.md)** | Как работать с «Эхо», [предложить функцию](docs/08-partners/feature-cards.md) |
+| 🏃 **[Текущий спринт](docs/07-sprints/sprint-07.md)** | Задачи до релиза |
+| 📝 **[Задачи и баги](https://github.com/SaTayouNy/EchoWeb/issues/new/choose)** | Шаблоны: задача, баг, запрос на изменение, карточка партнёра |
+
+---
+
+# Фронтенд (v10.30)
 
 Актуальный интерфейс платформы «Эхо»: сайт для зрителей и кабинет авторов «Эхо Studio».
 Собирается Vite на чистом JavaScript без фреймворка. Внешний вид и сценарии совпадают с согласованным прототипом `index.html` v10.30.
@@ -21,7 +35,7 @@ npm run preview    # просмотр собранной версии
 1. Скопируйте `.env.example` в `.env`.
 2. Укажите адрес API:
    - на сервере, если nginx проксирует `/api` на бэкенд: `VITE_API_URL=/api`;
-   - локально с бэкендом на `http://localhost:8000`: `VITE_API_URL=/api` и `VITE_DEV_PROXY=http://localhost:8000`.
+   - локально с бэкендом на `http://localhost:3000`: `VITE_API_URL=/api` и `VITE_DEV_PROXY=http://localhost:3000`.
 3. Пересоберите проект: `npm run build`. Адрес API вшивается в сборку.
 
 Инструкция для бэкенда — **[BACKEND.md](BACKEND.md)**, полный контракт (пути, тела запросов, форматы ответов) — **[API.md](API.md)**.
@@ -40,6 +54,9 @@ src/placeholders.js     картинки-заглушки
 src/assets/echo-mark.png  логотип
 API.md                  контракт API для бэкенда
 BACKEND.md              порядок подключения бэкенда и бизнес-правила
+CONTRIBUTING.md         ветки, pull request, правила кода
+docs/                   wiki проекта
+.github/                шаблоны задач и PR, автоматический реестр карточек партнёров
 ```
 
 ## Выкладка на сервер
@@ -52,7 +69,7 @@ server {
   server_name app.example.ru;
   root /var/www/echo/dist;
   location / { try_files $uri /index.html; }
-  location /api/ { proxy_pass http://127.0.0.1:8000/; }   # бэкенд
+  location /api/ { proxy_pass http://127.0.0.1:3000/; }   # бэкенд
 }
 ```
 

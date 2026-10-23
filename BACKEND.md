@@ -20,15 +20,15 @@ npm install
 cp .env.example .env
 ```
 
-Локально, бэкенд на `http://localhost:8000`:
+Локально, бэкенд на `http://localhost:3000`:
 
 ```env
 VITE_API_URL=/api
-VITE_DEV_PROXY=http://localhost:8000
+VITE_DEV_PROXY=http://localhost:3000
 ```
 
 ```bash
-npm run dev     # http://localhost:5173, запросы /api/* уходят на localhost:8000 без префикса /api
+npm run dev     # http://localhost:5173, запросы /api/* уходят на localhost:3000 без префикса /api
 ```
 
 Без префикса значит так: фронт вызывает `/api/movies`, а бэкенд получает `/movies`. CORS локально не нужен.
@@ -85,7 +85,7 @@ server {
   server_name app.example.ru;
   root /var/www/echo/dist;
   location / { try_files $uri /index.html; }
-  location /api/ { proxy_pass http://127.0.0.1:8000/; }
+  location /api/ { proxy_pass http://127.0.0.1:3000/; }
 }
 ```
 
