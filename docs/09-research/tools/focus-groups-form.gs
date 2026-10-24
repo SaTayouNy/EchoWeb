@@ -1,14 +1,14 @@
 /**
  * «Эхо» — анкета фокус-групп в Google Формах.
  *
- * createFocusGroupForm()   — основная анкета (рабочий сайт): код участника, UTM, регистрация.
+ * createFocusGroupForm()   — создаёт ДВЕ формы и выводит две ссылки:
+ *                            1) основная анкета (рабочий сайт): код участника, UTM, регистрация;
+ *                            2) демо-анкета для прохождения интерфейса на демонстрационных данных
+ *                               до релиза: без кодов, без регистрации и без Метрики.
  * createParticipantLinks() — таблица ссылок для участников основной анкеты (анкета с кодом + сайт с UTM).
- * createDemoForm()         — демо-версия анкеты для прохождения интерфейса на демонстрационных данных
- *                            до релиза: без кодов, без регистрации и без Метрики.
  *
- * Каждая функция создаёт форму ОДИН раз. Повторный запуск не создаёт новую форму,
- * а выводит ссылку на уже созданную — ссылка, которую вы раздали, не меняется.
- *
+ * Каждая форма создаётся ОДИН раз. Повторный запуск не создаёт новые формы,
+ * а выводит ссылки на уже созданные — ссылки, которые вы раздали, не меняются.
  * Текст анкеты и инструкция: docs/09-research/focus-groups-form.md
  * Запуск: script.google.com → Новый проект → вставить файл → заполнить CONFIG → Выполнить.
  */
@@ -93,20 +93,18 @@ function setGroupNavigation_(item, pagesByPrefix) {
 
 function createFocusGroupForm() {
   buildForm_(false);
-}
-
-function createDemoForm() {
   buildForm_(true);
 }
 
 function buildForm_(demo) {
   const key = demo ? 'DEMO_' : '';
+  const label = demo ? '2. Демо-анкета' : '1. Основная анкета';
   const props = PropertiesService.getScriptProperties();
   const existing = props.getProperty(key + 'FORM_ID');
   if (existing) {
     const old = FormApp.openById(existing);
-    Logger.log('Форма уже создана, ссылка прежняя: ' + old.getPublishedUrl());
-    Logger.log('Редактирование: ' + old.getEditUrl());
+    Logger.log(label + ' уже создана, ссылка прежняя: ' + old.getPublishedUrl());
+    Logger.log(label + ', редактирование: ' + old.getEditUrl());
     Logger.log('Чтобы создать новую форму, удалите свойство ' + key + 'FORM_ID: ' +
       'Настройки проекта → Свойства скрипта.');
     return;
@@ -321,9 +319,9 @@ function buildForm_(demo) {
   }
   props.setProperties(saved);
 
-  Logger.log('Редактирование формы: ' + form.getEditUrl());
-  Logger.log('Форма для участников: ' + form.getPublishedUrl());
-  Logger.log('Таблица ответов: ' + ss.getUrl());
+  Logger.log(label + ' — для участников: ' + form.getPublishedUrl());
+  Logger.log(label + ' — редактирование: ' + form.getEditUrl());
+  Logger.log(label + ' — таблица ответов: ' + ss.getUrl());
 }
 
 // ---------- ссылки участников ----------
