@@ -209,15 +209,13 @@ function authorLikeBadge(r){
 function reviewFooter(r){
  if(r.published===false)return `<div class="review-footer"><span class="muted">${r.moderation==='REJECTED'?'Рецензия не прошла модерацию':'Появится в общем списке после проверки модератором'}</span><span>${r.date?`Отправлена ${r.date}`:''}</span></div>`;
  const liked=state.likedReviews.has(r.id);
- const like=state.authorLogged
-  ?`<span class="review-like is-static" aria-label="Лайков: ${r.likes}"><span class="like-heart" aria-hidden="true">♥</span><span class="like-count">${fmt(r.likes)}</span></span>`
-  :`<button class="review-like ${liked?'liked':''}" data-like-review="${r.id}" aria-label="Нравится" aria-pressed="${liked}"><span class="like-heart" aria-hidden="true">♥</span><span class="like-count">${fmt(r.likes)}</span></button>`;
+ const like=`<button class="review-like ${liked?'liked':''}" data-like-review="${r.id}" aria-label="Нравится" aria-pressed="${liked}"><span class="like-heart" aria-hidden="true">♥</span><span class="like-count">${fmt(r.likes)}</span></button>`;
  return `<div class="review-footer"><span class="review-likes">${like}${authorLikeBadge(r)}</span><span>${r.date}</span></div>`;
 }
-/* Авторы отмечают рецензии только лайком автора, обычные лайки им недоступны. */
+/* Обычный лайк ставят и зрители, и авторы. Свой авторский комментарий автор не лайкает. */
 function commentLike(id,likes){
  likes=Number(likes)||0;
- if(state.authorLogged)return `<span class="comment-like is-static" aria-label="Лайков: ${likes}"><span class="like-heart" aria-hidden="true">♥</span><span class="like-count">${fmt(likes)}</span></span>`;
+ if(state.authorLogged&&MOVIES[id]?.authorComment?.author===state.authorAccount)return `<span class="comment-like is-static" aria-label="Лайков: ${likes}"><span class="like-heart" aria-hidden="true">♥</span><span class="like-count">${fmt(likes)}</span></span>`;
  const liked=state.likedAuthorComments.has(id);
  return `<button class="comment-like ${liked?'liked':''}" data-like-comment="${id}" aria-pressed="${liked}"><span class="like-heart" aria-hidden="true">♥</span><span class="like-count">${fmt(likes)}</span></button>`;
 }
@@ -331,23 +329,26 @@ function echoMovieRow(m){
  const counts=m.detailLoaded?`${fmt(m.reviews)} рецензий · ${fmt(m.ratings)} оценок`:'Оценки Эхо — в карточке фильма';
  return `<button class="movie-row echo-movie-row" data-movie="${m.id}"><img class="echo-movie-row-poster" src="${m.poster}" alt="Постер фильма ${escapeHtml(m.title)}"><div class="movie-copy"><div class="movie-copy-top"><h3>${escapeHtml(m.title)}</h3><p>${meta}</p></div><span class="movie-counts">${counts}</span></div><div class="movie-scores compact-triplet echo-score-grid">${scoreTriplet(m)}</div></button>`;
 }
-/* Пять параметров по каждой группе оценок: карточки в стиле плиток оценок + пустое состояние. */
-const PARAM_SHORT=['Драматургия','Персонажи','Визуал','Звук','Впечатление'];
-function parameterCards(m){
- const hasParts=s=>Array.isArray(s.parts)&&s.parts.length===5;
- const cards=SCORE_KINDS.map(([kind,label])=>{
-  const s=scoreSet(m,kind);
-  if(!hasParts(s))return `<div class="param-card rating-${kind} is-empty"><div class="param-card-head"><strong>${label}</strong><span class="param-card-total">—</span></div><p class="param-card-empty">Пока нет оценок</p></div>`;
-  return `<div class="param-card rating-${kind}"><div class="param-card-head"><strong>${label}</strong><span class="param-card-total" aria-label="Итог: ${s.total??'нет'}">${s.total??'—'}</span></div><div class="param-card-values">${s.parts.map((v,i)=>`<div class="param-value ${i===4?'impression':''}" aria-label="${ECHO_PARAMETER_NAMES[i]}: ${v}" title="${ECHO_PARAMETER_NAMES[i]}"><b>${v}</b><span>${PARAM_SHORT[i]}</span><i class="param-bar m-only" style="--v:${Math.max(0,Math.min(10,v))*10}%" aria-hidden="true"></i></div>`).join('')}</div></div>`;
- }).join('');
- const any=SCORE_KINDS.some(([kind])=>hasParts(scoreSet(m,kind)));
- return `${any?'':'<p class="param-empty-note">У фильма пока нет оценок. Параметры появятся после первой оценки или рецензии.</p>'}<div class="param-cards">${cards}</div>`;
+/* Три группы оценок одним компонентом: итог и пять параметров, как у оценки без рецензии в профиле. */
+const SCORE_BLOCKS=[['reviews','По рецензиям','оценки с текстом рецензии'],['ratings','Без рецензий','оценки без текста'],['critics','Медиа','оценки медиа и критиков']];
+function scoreBlocks(sets,{legend=true,cls=''}={}){
+ const blocks=SCORE_BLOCKS.map(([kind,label,hint])=>{const s=sets?.[kind]||{total:null,parts:[]};return `<div class="score-block score-block--${kind}"><div class="score-block-head"><strong class="score-block-label">${label}</strong><span class="score-block-hint">${hint}</span></div>${rating(s.total,Array.isArray(s.parts)?s.parts:[],kind)}</div>`}).join('');
+ return `<div class="score-blocks-wrap ${cls}"><div class="score-blocks">${blocks}</div>${legend?'<p class="score-legend">Параметры по порядку: драматургия · персонажи · визуал · звук · <b>впечатление</b></p>':''}</div>`;
+}
+function movieScoreSets(m){return {reviews:scoreSet(m,'reviews'),ratings:scoreSet(m,'ratings'),critics:scoreSet(m,'critics')}}
+/* Средние по нескольким фильмам: итог — среднее итогов, параметры — среднее каждого параметра. */
+function averageScoreSets(movies,totals={}){
+ return Object.fromEntries(SCORE_KINDS.map(([kind])=>{
+  const sets=movies.map(m=>scoreSet(m,kind)).filter(s=>s.total!==null&&s.total!==undefined);
+  const full=sets.filter(s=>Array.isArray(s.parts)&&s.parts.length===5);
+  const avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
+  const total=totals[kind]??(sets.length?Math.round(avg(sets.map(s=>s.total))):null);
+  const parts=full.length&&total!==null?[0,1,2,3,4].map(i=>Math.round(avg(full.map(s=>s.parts[i])))):[];
+  return [kind,{total,parts}];
+ }));
 }
 function filmAssessment(m,extraClass=''){
- const main=scoreSet(m,'reviews');
- return `<div class="echo-film-assessment ${extraClass}"><div class="echo-overall"><strong class="echo-overall-number">${main.total??'—'}</strong><div><strong>Итоговая оценка</strong><span>${main.total==null?'Появится после первых рецензий':'Средний итог по рецензиям'}</span></div></div><div class="echo-score-grid echo-film-score-grid">${scoreTriplet(m)}</div>
-       <details class="echo-parameters"><summary><span>Пять параметров оценки</span><span>Шкала 1–10 <b aria-hidden="true">⌄</b></span></summary><div class="echo-parameters-content">${parameterCards(m)}</div></details>
-     </div>`;
+ return `<div class="echo-film-assessment ${extraClass}">${scoreBlocks(movieScoreSets(m))}</div>`;
 }
 function echoMovieSummary(m){
  const descOpen=state.descOpen===m.id,longDesc=String(m.desc||'').length>160;
@@ -422,7 +423,7 @@ function reviewSort(list,sort){return [...list].sort((a,b)=>sort==='Популя
 
 function reviewCard(r,context='release'){
  const movie=MOVIES[r.movieId];const isLong=r.text.length>160;const expanded=state.expanded.has(r.id);const spoilerOpen=state.spoilers.has(r.id);
- const body=`<div class="review-copy ${isLong&&!expanded?'is-collapsed':''}"><p class="review-text">${escapeHtml(r.text)}</p></div>${isLong?`<button class="expand-btn" data-expand="${r.id}">${expanded?'Свернуть':'Читать полностью'}</button>`:''}`;
+ const body=`<div class="review-copy ${isLong&&!expanded?'is-collapsed':''}"><p class="review-text">${escapeHtml(r.text)}</p></div>${isLong?`<button class="expand-btn" data-expand="${r.id}" aria-expanded="${expanded}">${expanded?'Свернуть':'Читать полностью'}</button>`:''}`;
  const reviewRating=rating(r.total,r.parts,'reviews');
  const content=r.spoiler&&!spoilerOpen?`<div class="spoiler-cover"><div><strong>⚠ Рецензия содержит спойлеры</strong></div><button data-spoiler="${r.id}">Показать</button></div>`:`${r.spoiler?'<span class="spoiler-label">СПОЙЛЕРЫ</span>':''}${body}`;
  const filmMeta=[movie.year,movie.director].filter(Boolean).map(escapeHtml).join(' · ');
@@ -430,7 +431,7 @@ function reviewCard(r,context='release'){
   const badge=isOwnReview(r)||r.published===false?`<div class="review-status-row">${moderationBadge(r)}</div>`:'';
   return `<article class="review profile-review ${r.published===false?'is-pending':''}"><div class="profile-review-head"><button class="profile-review-film" data-movie="${r.movieId}"><img src="${movie.poster}" alt=""><span><strong>${escapeHtml(movie.title)}</strong><em>${escapeHtml(movie.director||'')}</em></span></button>${reviewRating}</div>${badge}<h3>${escapeHtml(r.title)}</h3>${content}${reviewFooter(r)}</article>`;
  }
- if(context==='own')return `<article class="review own-review ${r.published===false?'is-pending':''}"><div class="review-top">${reviewPerson(r,'div')}${reviewRating}</div><h3>${escapeHtml(r.title)}</h3>${content}${reviewFooter(r)}</article>`;
+ if(context==='own')return `<article class="review own-review ${r.published===false?'is-pending':''}"><div class="review-top">${reviewPerson(r,'div')}${reviewRating}</div><h3>${escapeHtml(r.title)}</h3>${content}${r.published===false?'':reviewFooter(r)}</article>`;
  if(context==='home')return `<article class="review review-home ${isLong&&expanded?'review-home-expanded':'review-home-compact'}"><div class="review-home-top">${reviewPerson(r)}${reviewRating}</div><button class="review-film-mini" data-movie="${movie.id}"><img src="${movie.poster}" alt=""><span><strong>${escapeHtml(movie.title)}</strong><em>${filmMeta}</em></span></button><h3>${escapeHtml(r.title)}</h3>${content}${reviewFooter(r)}</article>`;
  return `<article class="review ${context==='feed'?'review-feed':''}"><div class="review-top">${reviewPerson(r)}${reviewRating}</div>${context==='feed'?`<button class="review-film-context" data-movie="${movie.id}"><img src="${movie.poster}" alt=""><span><strong>${escapeHtml(movie.title)}</strong><em>${filmMeta}</em></span></button>`:''}<h3>${escapeHtml(r.title)}</h3>${content}${reviewFooter(r)}</article>`
 }
@@ -529,11 +530,22 @@ function siteShell(content){
 }
 
 function countBadge(n){return n?` <span class="count-badge m-only">${fmt(n)}</span>`:''}
+/* Главная для вошедшего автора: вместо светлячка — карточка автора и его работы в разговоре. */
+function authorHero(){
+ const name=state.authorAccount,a=getAuthorProfile(name);
+ const works=authorMovieIds(name),reviews=reviewsOnAuthorWorks(name),last=reviews[0];
+ const lastMovie=last?MOVIES[last.movieId]:null;
+ const stats=[['Работ',Math.max(works.length,(a.works||[]).length)],['Рецензий на работы',reviews.length],['Лайков автора',a.authorLikes||0]];
+ return `<section class="hero hero-author"><div class="hero-copy"><span class="eyebrow author">Эхо Studio</span><h1>Ваши работы<br><em>в разговоре.</em></h1><p>Смотрите, что зрители и медиа пишут о ваших фильмах, отмечайте сильные рецензии лайком автора и оставляйте комментарии к своим работам.</p><div class="hero-actions"><button class="btn author" data-open-studio="dashboard">Открыть Эхо Studio</button><button class="btn ghost" data-open-own-author><span class="d-only">Мой профиль автора</span><span class="m-only">Профиль</span></button></div></div>
+ <div class="hero-author-card"><div class="hac-person">${avatarImg(a.image,name,'alt=""')}<div><strong>${escapeHtml(name)}</strong><span>${escapeHtml(authorRole(a))}${a.verified?' · <b>✓ Верифицирован</b>':''}</span></div></div>
+ <div class="hac-stats">${stats.map(([l,v])=>`<div><b>${fmt(v)}</b><span>${l}</span></div>`).join('')}</div>
+ ${last&&lastMovie?`<button class="hac-latest" data-open-studio="audience"><small>Новая рецензия на вашу работу</small><strong>«${escapeHtml(last.title)}»</strong><span>${escapeHtml(last.user)} · ${escapeHtml(lastMovie.title)}</span></button>`:`<p class="hac-empty">${works.length?'Рецензий на ваши работы пока нет. Они появятся здесь и в Эхо Studio.':'Работы появятся в профиле после проверки заявки модератором.'}</p>`}</div></section>`;
+}
 function homePage(){
  const heroFly=state.userLogged?currentFly():FIREFLIES[0];
  const heroCaption=state.userLogged?`Ваш статус — «${heroFly.name}». Светлячок растёт вместе с уровнем`:'Светлячок растёт вместе с вашим уровнем';
  const discussed=REVIEWS.slice(0,3).map(r=>reviewCard(r,'home')).join('');
- return siteShell(`<main class="page"><section class="hero"><div class="hero-copy"><span class="eyebrow">Кино как разговор</span><h1>Смотри внимательнее.<br><em>Говори точнее.</em></h1><p>Рецензии, оценки и предпочтения превращают просмотр в разговор — между зрителями, авторами и критиками.</p><div class="hero-actions"><button class="btn primary" data-page="catalog">Исследовать фильмы</button><button class="btn ghost" data-page="${state.userLogged||state.authorLogged?'profile':'userAuth'}" ${state.userLogged||state.authorLogged?'':'data-view="userAuth"'}>${state.userLogged||state.authorLogged?'<span class="d-only">Мой профиль</span><span class="m-only">Профиль</span>':'Войти'}</button></div></div><div class="hero-visual" style="--glow:${heroFly.glow}"><div class="orbit o1"></div><div class="orbit o2"></div>${firefly(heroFly,54)}<span class="hero-caption">${heroCaption}</span></div></section>
+ return siteShell(`<main class="page">${state.authorLogged?authorHero():`<section class="hero"><div class="hero-copy"><span class="eyebrow">Кино как разговор</span><h1>Смотри внимательнее.<br><em>Говори точнее.</em></h1><p>Рецензии, оценки и предпочтения превращают просмотр в разговор — между зрителями, авторами и критиками.</p><div class="hero-actions"><button class="btn primary" data-page="catalog">Исследовать фильмы</button><button class="btn ghost" data-page="${state.userLogged||state.authorLogged?'profile':'userAuth'}" ${state.userLogged||state.authorLogged?'':'data-view="userAuth"'}>${state.userLogged||state.authorLogged?'<span class="d-only">Мой профиль</span><span class="m-only">Профиль</span>':'Войти'}</button></div></div><div class="hero-visual" style="--glow:${heroFly.glow}"><div class="orbit o1"></div><div class="orbit o2"></div>${firefly(heroFly,54)}<span class="hero-caption">${heroCaption}</span></div></section>`}
 ${state.userLogged?`<button class="m-status-card m-only" data-page="profile">${firefly(heroFly,30,false,'i')}<span><small>Ваш статус</small><strong>${heroFly.name} · ${fmt(state.user.points||0)} баллов</strong></span><b aria-hidden="true">→</b></button>`:''}
 <section class="section"><div class="section-head"><h2>Сейчас обсуждают${countBadge(REVIEWS.length)}</h2></div>${discussed?`<div class="reviews-grid">${discussed}</div>`:'<div class="panel muted empty-state">Рецензий пока нет — станьте первым, кто напишет о фильме.</div>'}</section>
 <section class="section"><div class="section-head"><h2>Популярное и любимая классика</h2><button class="quiet" data-page="catalog"><span class="d-only">Весь каталог →</span><span class="m-only">Все →</span></button></div><div class="poster-row">${MOVIES.slice(0,16).map(m=>`<button class="poster popular-poster" data-movie="${m.id}"><div class="poster-image"><img src="${m.poster}" alt=""><div class="poster-scores poster-total-strip"><span class="poster-total-pill rating-reviews" data-score-label="По рецензиям">${scoreSet(m,'reviews').total ?? '—'}</span><span class="poster-total-pill rating-ratings" data-score-label="Без рецензии">${scoreSet(m,'ratings').total ?? '—'}</span><span class="poster-total-pill rating-critics" data-score-label="Медиа / критики">${scoreSet(m,'critics').total ?? '—'}</span></div></div><strong>${escapeHtml(m.title)}</strong><span>${[m.year,m.director].filter(Boolean).map(escapeHtml).join(' · ')}</span></button>`).join('')}</div></section>
@@ -566,7 +578,7 @@ function catalogPage(){
  const count=firstLoad?'':`Найдено: ${fmt(total)}`;
  const body=list.length?list.map(echoMovieRow).join(''):firstLoad?`<div class="panel list-loading">${loader('Загружаем фильмы…')}</div>`:state.catalog.error?'':'<div class="panel muted empty-state">Фильмов по выбранным фильтрам нет. Попробуйте изменить жанр, год или страну.</div>';
  const more=!USE_MOCK&&list.length&&state.catalog.page<state.catalog.totalPages&&state.catalog.page<1000?`<div class="catalog-more"><button class="btn ghost" id="catalogMore" ${state.catalog.loading?'disabled':''}>${state.catalog.loading?'<span class="echo-spinner small" aria-hidden="true"></span>Загрузка…':'Показать ещё фильмы'}</button></div>`:'';
- return siteShell(`<main class="page"><section class="catalog-head"><div><span class="eyebrow">Каталог</span><h1>Фильмы всех лет</h1></div><div class="filters">${filters}</div></section><div class="count">${count}</div><div class="movie-list">${body}</div>${state.catalog.error?`<div class="panel muted error-state" role="alert">${escapeHtml(state.catalog.error)} <button class="quiet" id="catalogRetry">Повторить</button></div>`:''}${more}</main>`);
+ return siteShell(`<main class="page"><section class="catalog-head"><div><h1>Каталог</h1></div><div class="filters">${filters}</div></section><div class="count">${count}</div><div class="movie-list">${body}</div>${state.catalog.error?`<div class="panel muted error-state" role="alert">${escapeHtml(state.catalog.error)} <button class="quiet" id="catalogRetry">Повторить</button></div>`:''}${more}</main>`);
 }
 
 function searchPage(){
@@ -629,7 +641,7 @@ function ownReviewPanel(r){
  const text=pending
   ?(r.moderation==='REJECTED'?'Модератор не опубликовал рецензию. Она видна только вам.':'Модератор проверит текст, после этого рецензия появится в общем списке. Пока её видите только вы — здесь и в профиле.')
   :'Рецензия прошла проверку и видна всем в списке рецензий ниже.';
- return `<section class="panel own-review-panel ${pending?'is-pending':'is-published'}" id="ownReview"><div class="own-review-head"><div><span class="eyebrow">Ваше мнение</span><h2>Ваша рецензия</h2></div>${moderationBadge(r)}</div><p class="own-review-note">${text}</p>${reviewCard(r,'own')}<p class="muted small own-review-rule">На один фильм можно написать одну рецензию. Редактирование и удаление пока недоступны.</p></section>`;
+ return `<section class="panel own-review-panel ${pending?'is-pending':'is-published'}" id="ownReview"><div class="own-review-head"><h2>Ваша рецензия</h2>${moderationBadge(r)}</div><p class="own-review-note">${text}</p>${reviewCard(r,'own')}</section>`;
 }
 function authorComposerNote(){
  return `<section class="panel composer composer-author-note"><span class="eyebrow author">Эхо Studio</span><h2>Рецензии пишут зрители и медиа</h2><p class="muted">Как автор вы можете оставить авторский комментарий к своей работе и отметить рецензии лайком автора.</p><button class="btn author" data-open-studio="comments">Открыть Эхо Studio</button></section>`;
@@ -719,6 +731,11 @@ function getAuthorProfile(name){
 /* Комментарии автора с фильмами, к которым они написаны. */
 function authorCommentMovies(name){return MOVIES.filter(m=>m.authorComment&&m.authorComment.author===name)}
 
+/* Роль автора в фильме и режиссёр фильма — разные строки и разный вид, чтобы их не путали. */
+function filmCredit(role,director,name){
+ const showDirector=director&&director!==name;
+ return `<div class="film-credit"><span class="film-credit-role"><small>Роль автора</small><b>${escapeHtml(role||'Участник')}</b></span>${showDirector?`<span class="film-credit-director"><small>Режиссёр фильма</small>${escapeHtml(director)}</span>`:''}</div>`;
+}
 function authorPublicProfileContent(name,{studio=false}={}){
  const a=getAuthorProfile(name);
  const ownPublic=!studio&&state.authorLogged&&state.authorAccount===name;
@@ -745,7 +762,7 @@ function authorPublicProfileContent(name,{studio=false}={}){
        <div class="movie-copy-top">
          <h3>${escapeHtml(w.title)}</h3>
          <p>${escapeHtml([w.year,w.genre||m?.genre].filter(Boolean).join(' · '))}</p>
-         <p class="author-filmography-credit">${escapeHtml([ruRole(w.role)||role,w.director||m?.director].filter(Boolean).join(' · '))}</p>
+         ${filmCredit(ruRole(w.role)||role,w.director||m?.director,name)}
        </div>
        <span class="movie-counts">${fmt(reviews)} рецензий · ${fmt(ratings)} оценок</span>
      </div>
@@ -754,7 +771,8 @@ function authorPublicProfileContent(name,{studio=false}={}){
  }).join('');
  const sortControl=`<label class="author-film-sort"><span>Сортировка</span><select id="authorFilmSort" aria-label="Сортировка фильмографии">${['Новые','Старые','Популярные'].map(v=>`<option ${state.authorFilmSort===v?'selected':''}>${v}</option>`).join('')}</select></label>`;
  const filmList=`<div class="movie-list author-filmography-list">${filmography||'<div class="panel muted empty-state">Работы пока не добавлены.</div>'}</div>`;
- const averages=`<div class="author-score-section"><span class="eyebrow author">Средние оценки работ</span><div class="author-public-averages">${compactRating(a.scores?.reviews,'reviews','По рецензиям')}${compactRating(a.scores?.ratings,'ratings','Без рецензий')}${compactRating(a.scores?.critics,'critics','Медиа / критики')}</div></div>`;
+ const workMovies=(a.works||[]).map(w=>MOVIES.find(x=>x.title===w.title)).filter(Boolean);
+ const averages=`<div class="author-score-section"><span class="eyebrow author">Средние оценки работ</span>${scoreBlocks(averageScoreSets(workMovies,a.scores||{}),{cls:'author-score-blocks'})}</div>`;
 
  /* Автор из титров, ещё не зарегистрированный в Эхо: без авторских лайков, оценок и комментариев. */
  if(!verified){
@@ -850,7 +868,7 @@ function studioWorks(){
        <span class="muted small">${fmt(w.reviews||0)} рецензий · ${fmt(w.ratings||0)} оценок</span>
      </div>
      <div class="studio-work-scores">
-        ${scoreTiles(w.scores)}
+        ${scoreBlocks(m?movieScoreSets(m):Object.fromEntries(SCORE_KINDS.map(([k])=>[k,{total:w.scores?.[k]??null,parts:[]}])),{legend:false,cls:'score-blocks--row'})}
      </div>
    </article>`;
  }).join('')||'<div class="panel muted empty-state">Подтверждённые работы пока не добавлены. Модератор привяжет их к профилю после проверки заявки.</div>'}</div></section></main>`;
@@ -858,10 +876,10 @@ function studioWorks(){
 
 function studioReviewCard(r){
  const movie=MOVIES[r.movieId];const isLong=r.text.length>210;const expanded=state.expanded.has(r.id);const spoilerOpen=state.spoilers.has(r.id);
- const body=`<div class="review-copy ${isLong&&!expanded?'is-collapsed':''}"><p class="review-text">${escapeHtml(r.text)}</p></div>${isLong?`<button class="expand-btn" data-expand="${r.id}">${expanded?'Свернуть':'Читать полностью'}</button>`:''}`;
+ const body=`<div class="review-copy ${isLong&&!expanded?'is-collapsed':''}"><p class="review-text">${escapeHtml(r.text)}</p></div>${isLong?`<button class="expand-btn" data-expand="${r.id}" aria-expanded="${expanded}">${expanded?'Свернуть':'Читать полностью'}</button>`:''}`;
  const content=r.spoiler&&!spoilerOpen?`<div class="spoiler-cover"><div><strong>⚠ Рецензия содержит спойлеры</strong></div><button data-spoiler="${r.id}">Показать</button></div>`:`${r.spoiler?'<span class="spoiler-label">СПОЙЛЕРЫ</span>':''}${body}`;
  const mine=(r.authorLikes||[]).includes(state.authorAccount);
- return `<article class="review studio-review-card"><div class="review-top">${reviewPerson(r,'div')}${rating(r.total,r.parts,'reviews')}</div><button class="review-film-context" data-public-movie="${movie.id}"><img src="${movie.poster}" alt=""><span><strong>${escapeHtml(movie.title)}</strong><em>${movie.year} · ${escapeHtml(movie.director)}</em></span></button><h3>${escapeHtml(r.title)}</h3>${content}<div class="review-footer"><span class="review-likes"><span class="review-like is-static" aria-label="Лайков: ${r.likes}"><span class="like-heart" aria-hidden="true">♥</span><span class="like-count">${fmt(r.likes)}</span></span><button class="author-like ${mine?'':'is-empty'}" data-author-like="${r.id}" aria-pressed="${mine}">${mine?'★ Лайк автора':'☆ Поставить лайк автора'}</button></span><span>${r.date}</span></div></article>`;
+ return `<article class="review studio-review-card"><div class="review-top">${reviewPerson(r,'div')}${rating(r.total,r.parts,'reviews')}</div><button class="review-film-context" data-public-movie="${movie.id}"><img src="${movie.poster}" alt=""><span><strong>${escapeHtml(movie.title)}</strong><em>${movie.year} · ${escapeHtml(movie.director)}</em></span></button><h3>${escapeHtml(r.title)}</h3>${content}<div class="review-footer"><span class="review-likes"><button class="review-like ${state.likedReviews.has(r.id)?'liked':''}" data-like-review="${r.id}" aria-label="Нравится" aria-pressed="${state.likedReviews.has(r.id)}"><span class="like-heart" aria-hidden="true">♥</span><span class="like-count">${fmt(r.likes)}</span></button><button class="author-like ${mine?'':'is-empty'}" data-author-like="${r.id}" aria-pressed="${mine}">${mine?'★ Лайк автора':'☆ Поставить лайк автора'}</button></span><span>${r.date}</span></div></article>`;
 }
 
 function studioAudience(){
@@ -888,6 +906,37 @@ function submitConfirmModal(payload){
  return `<div class="overlay" id="submitOverlay"><div class="modal submit-modal" role="dialog" aria-modal="true"><div class="modal-head"><div><span class="eyebrow">${ratingOnly?'Оценка без рецензии':'Публикация'}</span><h2>${ratingOnly?'Сохранить только оценку?':'Опубликовать рецензию?'}</h2></div><button id="closeSubmitModal" aria-label="Закрыть">×</button></div>${ratingOnly?`<div class="submit-score">${rating(payload.total,payload.parts,'ratings',true)}</div><p>Текст рецензии пуст. На странице фильма останутся только итоговый балл и значения параметров.</p>`:`<div class="submit-review-preview"><strong>${escapeHtml(payload.title||'Без заголовка')}</strong><p>${escapeHtml(payload.text.slice(0,220))}${payload.text.length>220?'…':''}</p></div>`}${ratingOnly?'':`<label class="submit-spoiler-toggle" for="confirmSpoilerToggle"><input id="confirmSpoilerToggle" type="checkbox" ${payload.spoiler?'checked':''}><span>В рецензии есть спойлеры</span></label><p class="muted small submit-moderation-note">После отправки рецензия пройдёт модерацию и появится в общем списке.</p>`}<div class="submit-actions"><button class="btn ghost" id="cancelSubmit">Отмена</button><button class="btn ${ratingOnly?'rating-only':'primary'}" id="confirmSubmit">${ratingOnly?'Сохранить оценку':'Отправить рецензию'}</button></div></div></div>`
 }
 let noticeTimer=null;
+/* Отзывчивость: плавное раскрытие текста и короткий отклик на нажатие. */
+function reduceMotion(){return matchMedia('(prefers-reduced-motion: reduce)').matches}
+function pulse(el){if(!el||reduceMotion())return;el.classList.remove('is-pulse');void el.offsetWidth;el.classList.add('is-pulse');setTimeout(()=>el.classList.remove('is-pulse'),420)}
+/* setCollapsed(true|false) переключает классы свёрнутого вида. Высота анимируется от текущей до итоговой. */
+function animateHeight(el,open,setCollapsed,done){
+ if(!el){setCollapsed(!open);done&&done();return}
+ const from=el.getBoundingClientRect().height;
+ setCollapsed(!open);
+ const to=el.getBoundingClientRect().height;
+ if(reduceMotion()||!el.animate||Math.abs(to-from)<2){done&&done();return}
+ if(!open)setCollapsed(false);
+ el.style.overflow='hidden';
+ const anim=el.animate([{height:from+'px'},{height:to+'px'}],{duration:Math.round(Math.min(460,Math.max(240,Math.abs(to-from)*.55))),easing:'cubic-bezier(.22,.7,.2,1)'});
+ const finish=()=>{el.style.overflow='';if(!open)setCollapsed(true);done&&done()};
+ anim.onfinish=finish;anim.oncancel=finish;
+}
+function toggleReviewText(btn){
+ const id=+btn.dataset.expand,open=!state.expanded.has(id);
+ open?state.expanded.add(id):state.expanded.delete(id);
+ const card=btn.closest('article'),copy=card?.querySelector('.review-copy');
+ if(!card||!copy){render();return}
+ btn.textContent=open?'Свернуть':'Читать полностью';btn.setAttribute('aria-expanded',String(open));
+ animateHeight(copy,open,collapsed=>{
+  copy.classList.toggle('is-collapsed',collapsed);
+  if(card.classList.contains('review-home')){card.classList.toggle('review-home-expanded',!collapsed);card.classList.toggle('review-home-compact',collapsed)}
+ },()=>{
+  if(open)return;
+  const top=card.getBoundingClientRect().top,offset=isPhone()?64:90;
+  if(top<offset)scrollTo({top:scrollY+top-offset,behavior:reduceMotion()?'auto':'smooth'});
+ });
+}
 function showNotice(message,ms=2200){
  clearTimeout(noticeTimer);
  document.getElementById('echoNotice')?.remove();
@@ -908,22 +957,27 @@ function bind(){
  document.querySelectorAll('[data-profile-tab]').forEach(b=>b.onclick=()=>{state.profileTab=b.dataset.profileTab;render()});
  const ps=document.getElementById('profileSort');if(ps)ps.onchange=()=>{state.profileSort=ps.value;render()};
  const ms=document.getElementById('movieSort');if(ms)ms.onchange=()=>{state.movieSort=ms.value;render()};
- document.querySelectorAll('[data-expand]').forEach(b=>b.onclick=()=>{const id=+b.dataset.expand;state.expanded.has(id)?state.expanded.delete(id):state.expanded.add(id);render()});
+ document.querySelectorAll('[data-expand]').forEach(b=>b.onclick=()=>toggleReviewText(b));
+ /* Если текст целиком помещается в свёрнутый вид, кнопка «Читать полностью» не нужна. */
+ document.querySelectorAll('.review-copy.is-collapsed').forEach(c=>{if(c.scrollHeight<=c.clientHeight+4){c.classList.remove('is-collapsed');c.closest('article')?.querySelector('[data-expand]')?.remove()}});
  document.querySelectorAll('[data-spoiler]').forEach(b=>b.onclick=()=>{state.spoilers.add(+b.dataset.spoiler);render()});
  document.querySelectorAll('[data-like-review]').forEach(b=>b.onclick=e=>{
   e.preventDefault();e.stopPropagation();
-  if(state.authorLogged)return;
-  if(requireViewerLogin())return;
+  if(!state.authorLogged&&requireViewerLogin())return;
   const id=+b.dataset.likeReview,r=REVIEWS.find(x=>x.id===id);if(!r)return;
-  const wasLiked=state.likedReviews.has(id);
-  if(wasLiked){state.likedReviews.delete(id);r.likes=Math.max(0,r.likes-1);r.popular=Math.max(0,r.popular-1)}
-  else{state.likedReviews.add(id);r.likes++;r.popular++}
-  api.setReviewLike(id,!wasLiked).catch(apiFail);
-  document.querySelectorAll('[data-like-review="'+id+'"]').forEach(btn=>{
-    btn.classList.toggle('liked',!wasLiked);
-    btn.setAttribute('aria-pressed',String(!wasLiked));
+  const apply=liked=>{
+   if(liked){state.likedReviews.add(id);r.likes++;r.popular++}
+   else{state.likedReviews.delete(id);r.likes=Math.max(0,r.likes-1);r.popular=Math.max(0,r.popular-1)}
+   document.querySelectorAll('[data-like-review="'+id+'"]').forEach(btn=>{
+    btn.classList.toggle('liked',liked);
+    btn.setAttribute('aria-pressed',String(liked));
     const count=btn.querySelector('.like-count');if(count)count.textContent=fmt(r.likes);
-  });
+    if(liked)pulse(btn);
+   });
+  };
+  const wasLiked=state.likedReviews.has(id);
+  apply(!wasLiked);
+  api.setReviewLike(id,!wasLiked).catch(err=>{apply(wasLiked);apiFail(err)});
 });
  document.querySelectorAll('[data-filter-toggle]').forEach(b=>b.onclick=()=>{const k=b.dataset.filterToggle;state.openFilter=state.openFilter===k?null:k;render()});
  document.querySelectorAll('.filter-backdrop').forEach(b=>b.onclick=e=>{e.stopPropagation();state.openFilter=null;render()});
@@ -972,23 +1026,33 @@ function bind(){
   b.onclick=()=>{target?.scrollIntoView({block:'start',behavior:'smooth'});setTimeout(()=>{if(b.dataset.mFab==='reviewComposer')document.querySelector('[data-param="0"]')?.focus({preventScroll:true})},450)};
   if(target&&'IntersectionObserver' in window){fabObserver?.disconnect();fabObserver=new IntersectionObserver(([en])=>b.classList.toggle('is-hidden',en.isIntersecting),{threshold:0});fabObserver.observe(target)}
  });
- document.querySelectorAll('[data-desc-toggle]').forEach(b=>b.onclick=()=>{const id=+b.dataset.descToggle;state.descOpen=state.descOpen===id?null:id;render()});
+ document.querySelectorAll('[data-desc-toggle]').forEach(b=>b.onclick=()=>{
+  const id=+b.dataset.descToggle,open=state.descOpen!==id,box=b.closest('.m-film-desc');
+  state.descOpen=open?id:null;
+  if(!box){render();return}
+  b.textContent=open?'Свернуть':'Читать полностью';b.setAttribute('aria-expanded',String(open));
+  animateHeight(box.querySelector('p'),open,collapsed=>box.classList.toggle('is-open',!collapsed));
+ });
  document.querySelectorAll('[data-crew-tab]').forEach(b=>b.onclick=()=>{state.crewTab=b.dataset.crewTab;render()});
  document.querySelectorAll('[data-crew-move]').forEach(b=>b.onclick=()=>{const t=document.getElementById('crewTrack');if(t)t.scrollBy({left:+b.dataset.crewMove*320,behavior:'smooth'})});
  document.querySelectorAll('[data-like-comment]').forEach(b=>b.onclick=e=>{
   e.preventDefault();e.stopPropagation();
-  if(state.authorLogged)return;
-  if(requireViewerLogin())return;
+  if(!state.authorLogged&&requireViewerLogin())return;
   const id=+b.dataset.likeComment,m=MOVIES[id];if(!m?.authorComment)return;
-  const wasLiked=state.likedAuthorComments.has(id);
-  if(wasLiked){state.likedAuthorComments.delete(id);m.authorComment.likes=Math.max(0,m.authorComment.likes-1)}
-  else{state.likedAuthorComments.add(id);m.authorComment.likes++}
-  api.setAuthorCommentLike(id,!wasLiked).catch(apiFail);
-  document.querySelectorAll('[data-like-comment="'+id+'"]').forEach(btn=>{
-    btn.classList.toggle('liked',!wasLiked);
-    btn.setAttribute('aria-pressed',String(!wasLiked));
+  if(state.authorLogged&&m.authorComment.author===state.authorAccount)return;
+  const apply=liked=>{
+   if(liked){state.likedAuthorComments.add(id);m.authorComment.likes++}
+   else{state.likedAuthorComments.delete(id);m.authorComment.likes=Math.max(0,m.authorComment.likes-1)}
+   document.querySelectorAll('[data-like-comment="'+id+'"]').forEach(btn=>{
+    btn.classList.toggle('liked',liked);
+    btn.setAttribute('aria-pressed',String(liked));
     const count=btn.querySelector('.like-count');if(count)count.textContent=fmt(m.authorComment.likes);
-  });
+    if(liked)pulse(btn);
+   });
+  };
+  const wasLiked=state.likedAuthorComments.has(id);
+  apply(!wasLiked);
+  api.setAuthorCommentLike(id,!wasLiked).catch(err=>{apply(wasLiked);apiFail(err)});
 });
 
  document.querySelectorAll('[data-param]').forEach(inp=>inp.oninput=()=>{
