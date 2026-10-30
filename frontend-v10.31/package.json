@@ -1,0 +1,14 @@
+{
+  "name": "echo-movie-platform",
+  "private": true,
+  "version": "10.31.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "devDependencies": {
+    "vite": "^8.3.5"
+  }
+}

@@ -9,6 +9,7 @@
 | 🤝 **[Для партнёров](docs/08-partners/README.md)** | Как работать с «Эхо», [предложить функцию](docs/08-partners/feature-cards.md) |
 | 🏃 **[Текущий спринт](docs/07-sprints/sprint-07.md)** | Задачи до релиза |
 | 📝 **[Задачи и баги](https://github.com/SaTayouNy/EchoWeb/issues/new/choose)** | Шаблоны: задача, баг, запрос на изменение, карточка партнёра |
+| 🚀 **[frontend-v10.31](frontend-v10.31/CHANGES.md)** | Финальная версия интерфейса на коннекторе бэкенда — для замены фронта на хосте |
 
 ---
 
