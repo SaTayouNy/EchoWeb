@@ -3523,3 +3523,14 @@ footer.site-footer .footer-source{justify-self:end;text-align:right;color:var(--
  .param-info{width:36px!important;height:36px!important;flex-basis:36px!important}
  .studio-content .quiet,.public-author-backline .quiet,.studio-author-header .quiet,.author-own-actions .quiet{display:inline-flex!important;align-items:center;min-height:44px!important}
 }
+/* v10.32 — статистика профиля: 5 плиток без пустой ячейки (3 + 2) */
+@media(max-width:767px){
+ body .profile-card:not(.author-public)>.stats{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+ body .profile-card:not(.author-public)>.stats>div{grid-column:span 2}
+ body .profile-card:not(.author-public)>.stats>div:nth-child(n+4){grid-column:span 3}
+}
+@media(max-width:360px){
+ body .profile-card:not(.author-public)>.stats{grid-template-columns:1fr 1fr!important}
+ body .profile-card:not(.author-public)>.stats>div:nth-child(n){grid-column:auto}
+ body .profile-card:not(.author-public)>.stats>div:nth-child(5){grid-column:1/-1}
+}
