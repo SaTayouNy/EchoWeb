@@ -332,7 +332,7 @@ function echoMovieRow(m){
 /* Три группы оценок одним компонентом: итог и пять параметров, как у оценки без рецензии в профиле. */
 const SCORE_BLOCKS=[['reviews','По рецензиям','оценки с текстом рецензии'],['ratings','Без рецензий','оценки без текста'],['critics','Медиа','оценки медиа и критиков']];
 function scoreBlocks(sets,{legend=false,cls=''}={}){
- const blocks=SCORE_BLOCKS.map(([kind,label,hint])=>{const s=sets?.[kind]||{total:null,parts:[]};return `<div class="score-block score-block--${kind}"><div class="score-block-head"><strong class="score-block-label">${label}</strong><span class="score-block-hint">${hint}</span></div>${rating(s.total,Array.isArray(s.parts)?s.parts:[],kind)}</div>`}).join('');
+ const blocks=SCORE_BLOCKS.map(([kind,label,hint])=>{const s=sets?.[kind]||{total:null,parts:[]};return `<div class="score-block score-block--${kind}"><div class="score-block-head"><strong class="score-block-label"><span class="sbl-full">${label}</span><span class="sbl-short">${{reviews:'Рецензии',ratings:'Без рецензий',critics:'Медиа'}[kind]}</span></strong><span class="score-block-hint">${hint}</span></div>${rating(s.total,Array.isArray(s.parts)?s.parts:[],kind)}</div>`}).join('');
  return `<div class="score-blocks-wrap ${cls}"><div class="score-blocks">${blocks}</div>${legend?'<p class="score-legend">Параметры по порядку: драматургия · персонажи · визуал · звук · <b>впечатление</b></p>':''}</div>`;
 }
 function movieScoreSets(m){return {reviews:scoreSet(m,'reviews'),ratings:scoreSet(m,'ratings'),critics:scoreSet(m,'critics')}}
