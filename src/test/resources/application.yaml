@@ -1,0 +1,83 @@
+spring:
+  datasource:
+    url: "jdbc:h2:mem:echo_test_${random.uuid};MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+    username: "sa"
+    password: ""
+    driver-class-name: "org.h2.Driver"
+  jpa:
+    hibernate:
+      ddl-auto: "validate"
+    open-in-view: false
+  flyway:
+    enabled: true
+
+app:
+  auth:
+    session:
+      access-ttl: "PT30M"
+      refresh-ttl: "P30D"
+      max-active-per-user: 20
+    email-verification:
+      ttl: "P1D"
+    password-recovery:
+      ttl: "PT30M"
+    token:
+      secret: "test-token-secret-for-integration-123456"
+    bcrypt:
+      strength: 4
+  email:
+    provider: "in-memory"
+    from: "no-reply@test.local"
+    verification-url-template: "http://localhost:3000/verify-email?token=%s"
+    password-recovery-url-template: "http://localhost:3000/reset-password?token=%s"
+    outbox:
+      dispatch-fixed-delay-ms: 3600000
+      recover-stale-fixed-delay-ms: 3600000
+      cleanup-fixed-delay-ms: 3600000
+      max-attempts: 3
+      processing-timeout: "PT5M"
+      sent-retention: "P7D"
+      failed-retention: "P30D"
+  tmdb:
+    provider: "stub"
+    cast-limit: 15
+    sync:
+      async: true
+    refresh-fixed-delay-ms: 3600000
+  scheduling:
+    enabled: false
+  security:
+    rate-limit:
+      login:
+        capacity: 1000
+        window: "PT1M"
+      register:
+        capacity: 1000
+        window: "PT5M"
+      email-verification-request:
+        capacity: 1000
+        window: "PT15M"
+      email-verification-confirm:
+        capacity: 1000
+        window: "PT15M"
+      password-recovery-request:
+        capacity: 1000
+        window: "PT15M"
+      password-recovery-confirm:
+        capacity: 1000
+        window: "PT15M"
+      media-lookup:
+        capacity: 1000
+        window: "PT1M"
+      media-search:
+        capacity: 1000
+        window: "PT1M"
+  http:
+    max-auth-json-bytes: 65536
+    max-review-json-bytes: 262144
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info"

@@ -1,0 +1,2 @@
+ALTER TABLE media ADD COLUMN cast_details TEXT NOT NULL DEFAULT '[]';
+ALTER TABLE media ADD COLUMN crew_details TEXT NOT NULL DEFAULT '[]';

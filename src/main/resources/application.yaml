@@ -1,0 +1,120 @@
+server:
+  port: "${SERVER_PORT:3000}"
+
+spring:
+  datasource:
+    url: "${DB_URL}"
+    username: "${DB_USERNAME}"
+    password: "${DB_PASSWORD}"
+    driver-class-name: "${DB_DRIVER_CLASS_NAME:org.postgresql.Driver}"
+  jpa:
+    hibernate:
+      ddl-auto: "${APP_JPA_DDL_AUTO:validate}"
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: "${HIBERNATE_FORMAT_SQL:true}"
+  h2:
+    console:
+      enabled: "${H2_CONSOLE_ENABLED:false}"
+      path: "${H2_CONSOLE_PATH:/h2-console}"
+  mail:
+    default-encoding: "${SPRING_MAIL_DEFAULT_ENCODING:UTF-8}"
+
+app:
+  auth:
+    session:
+      access-ttl: "${APP_AUTH_SESSION_ACCESS_TTL:PT30M}"
+      refresh-ttl: "${APP_AUTH_SESSION_REFRESH_TTL:P30D}"
+      max-active-per-user: "${APP_AUTH_SESSION_MAX_ACTIVE_PER_USER:20}"
+    # Verification links still travel via URL, so keep their TTL short and prefer a no-referrer frontend page.
+    email-verification:
+      ttl: "${APP_AUTH_EMAIL_VERIFICATION_TTL:PT1H}"
+    password-recovery:
+      ttl: "${APP_AUTH_PASSWORD_RECOVERY_TTL:PT30M}"
+    token:
+      secret: "${APP_AUTH_TOKEN_SECRET}"
+    bcrypt:
+      strength: "${APP_AUTH_BCRYPT_STRENGTH:12}"
+  email:
+    provider: "${APP_EMAIL_PROVIDER:in-memory}"
+    from: "${APP_EMAIL_FROM:no-reply@echo.local}"
+    verification-url-template: "${APP_EMAIL_VERIFICATION_URL_TEMPLATE:http://localhost:3000/verify-email?token=%s}"
+    password-recovery-url-template: "${APP_EMAIL_PASSWORD_RECOVERY_URL_TEMPLATE:http://localhost:3000/reset-password?token=%s}"
+    outbox:
+      dispatch-fixed-delay-ms: "${APP_EMAIL_OUTBOX_DISPATCH_FIXED_DELAY_MS:30000}"
+      recover-stale-fixed-delay-ms: "${APP_EMAIL_OUTBOX_RECOVER_STALE_FIXED_DELAY_MS:60000}"
+      cleanup-fixed-delay-ms: "${APP_EMAIL_OUTBOX_CLEANUP_FIXED_DELAY_MS:86400000}"
+      batch-size: "${APP_EMAIL_OUTBOX_BATCH_SIZE:50}"
+      max-attempts: "${APP_EMAIL_OUTBOX_MAX_ATTEMPTS:10}"
+      max-retry-delay: "${APP_EMAIL_OUTBOX_MAX_RETRY_DELAY:PT15M}"
+      processing-timeout: "${APP_EMAIL_OUTBOX_PROCESSING_TIMEOUT:PT5M}"
+      sent-retention: "${APP_EMAIL_OUTBOX_SENT_RETENTION:P7D}"
+      failed-retention: "${APP_EMAIL_OUTBOX_FAILED_RETENTION:P30D}"
+      cleanup-batch-size: "${APP_EMAIL_OUTBOX_CLEANUP_BATCH_SIZE:1000}"
+  tmdb:
+    provider: "${APP_TMDB_PROVIDER:http}"
+    base-url: "${APP_TMDB_BASE_URL:https://api.themoviedb.org/3}"
+    access-token: "${APP_TMDB_ACCESS_TOKEN:}"
+    language: "${APP_TMDB_LANGUAGE:ru-RU}"
+    fallback-language: "${APP_TMDB_FALLBACK_LANGUAGE:en-US}"
+    image-base-url: "${APP_TMDB_IMAGE_BASE_URL:https://image.tmdb.org/t/p/w500}"
+    cast-limit: "${APP_TMDB_CAST_LIMIT:15}"
+    connect-timeout: "${APP_TMDB_CONNECT_TIMEOUT:PT3S}"
+    read-timeout: "${APP_TMDB_READ_TIMEOUT:PT8S}"
+    retry-max-attempts: "${APP_TMDB_RETRY_MAX_ATTEMPTS:2}"
+    retry-backoff: "${APP_TMDB_RETRY_BACKOFF:PT0.25S}"
+    sync:
+      async: "${APP_TMDB_SYNC_ASYNC:true}"
+      max-in-flight: "${APP_TMDB_SYNC_MAX_IN_FLIGHT:1000}"
+    refresh-stale-after: "${APP_TMDB_REFRESH_STALE_AFTER:P7D}"
+    refresh-fixed-delay-ms: "${APP_TMDB_REFRESH_FIXED_DELAY_MS:86400000}"
+    refresh-batch-size: "${APP_TMDB_REFRESH_BATCH_SIZE:25}"
+  security:
+    rate-limit:
+      login:
+        capacity: "${APP_SECURITY_RATE_LIMIT_LOGIN_CAPACITY:10}"
+        window: "${APP_SECURITY_RATE_LIMIT_LOGIN_WINDOW:PT1M}"
+      register:
+        capacity: "${APP_SECURITY_RATE_LIMIT_REGISTER_CAPACITY:10}"
+        window: "${APP_SECURITY_RATE_LIMIT_REGISTER_WINDOW:PT5M}"
+      email-verification-request:
+        capacity: "${APP_SECURITY_RATE_LIMIT_EMAIL_VERIFICATION_REQUEST_CAPACITY:5}"
+        window: "${APP_SECURITY_RATE_LIMIT_EMAIL_VERIFICATION_REQUEST_WINDOW:PT15M}"
+      email-verification-confirm:
+        capacity: "${APP_SECURITY_RATE_LIMIT_EMAIL_VERIFICATION_CONFIRM_CAPACITY:10}"
+        window: "${APP_SECURITY_RATE_LIMIT_EMAIL_VERIFICATION_CONFIRM_WINDOW:PT15M}"
+      password-recovery-request:
+        capacity: "${APP_SECURITY_RATE_LIMIT_PASSWORD_RECOVERY_REQUEST_CAPACITY:5}"
+        window: "${APP_SECURITY_RATE_LIMIT_PASSWORD_RECOVERY_REQUEST_WINDOW:PT15M}"
+      password-recovery-confirm:
+        capacity: "${APP_SECURITY_RATE_LIMIT_PASSWORD_RECOVERY_CONFIRM_CAPACITY:10}"
+        window: "${APP_SECURITY_RATE_LIMIT_PASSWORD_RECOVERY_CONFIRM_WINDOW:PT15M}"
+      media-lookup:
+        capacity: "${APP_SECURITY_RATE_LIMIT_MEDIA_LOOKUP_CAPACITY:30}"
+        window: "${APP_SECURITY_RATE_LIMIT_MEDIA_LOOKUP_WINDOW:PT1M}"
+      media-search:
+        capacity: "${APP_SECURITY_RATE_LIMIT_MEDIA_SEARCH_CAPACITY:20}"
+        window: "${APP_SECURITY_RATE_LIMIT_MEDIA_SEARCH_WINDOW:PT1M}"
+      cleanup-fixed-delay-ms: "${APP_SECURITY_RATE_LIMIT_CLEANUP_FIXED_DELAY_MS:60000}"
+      trusted-proxies: "${APP_SECURITY_RATE_LIMIT_TRUSTED_PROXIES:}"
+      backend: "${APP_SECURITY_RATE_LIMIT_BACKEND:in-memory}"
+  http:
+    max-auth-json-bytes: "${APP_HTTP_MAX_AUTH_JSON_BYTES:65536}"
+    max-review-json-bytes: "${APP_HTTP_MAX_REVIEW_JSON_BYTES:262144}"
+  cors:
+    allowed-origins: "${APP_CORS_ALLOWED_ORIGINS:http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,http://127.0.0.1:3000}"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # Keep actuator exposure minimal even though the endpoints themselves are admin-only in SecurityConfig.
+        include: "${MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE:health,info}"
+  endpoint:
+    health:
+      probes:
+        enabled: "${MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED:true}"
+
+# Local development can use the `dev` profile:
+# SPRING_PROFILES_ACTIVE=dev

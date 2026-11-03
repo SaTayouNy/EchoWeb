@@ -1,0 +1,35 @@
+package org.example.echo.exception;
+
+import org.example.echo.model.ApiModels;
+import org.springframework.http.HttpStatus;
+
+import java.util.List;
+
+public class ApiException extends RuntimeException {
+    private final HttpStatus status;
+    private final String code;
+    private final List<ApiModels.ErrorDetail> details;
+
+    public ApiException(HttpStatus status, String code, String message) {
+        this(status, code, message, null);
+    }
+
+    public ApiException(HttpStatus status, String code, String message, List<ApiModels.ErrorDetail> details) {
+        super(message);
+        this.status = status;
+        this.code = code;
+        this.details = details;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public List<ApiModels.ErrorDetail> getDetails() {
+        return details;
+    }
+}

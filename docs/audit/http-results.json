@@ -1,0 +1,777 @@
+{
+  "timestamp": "2026-09-11T19:04:46.912Z",
+  "environment": "fresh packaged BE; loopback; H2 migrations + validate; stub TMDB / unconfigured HTTP; in-memory email",
+  "passed": 61,
+  "failed": 13,
+  "results": [
+    {
+      "id": "anonymous profile rejected",
+      "expected": {
+        "status": 401
+      },
+      "actual": {
+        "status": 401,
+        "code": "UNAUTHORIZED"
+      },
+      "passed": true
+    },
+    {
+      "id": "CORS Vite origin",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "CORS unknown origin rejected",
+      "expected": {
+        "status": 403
+      },
+      "actual": {
+        "status": 403
+      },
+      "passed": true
+    },
+    {
+      "id": "username-only registration",
+      "expected": {
+        "status": 201
+      },
+      "actual": {
+        "status": 201
+      },
+      "passed": true
+    },
+    {
+      "id": "registration issues tokens without email",
+      "expected": "access and refresh tokens; email=null; verification=false",
+      "actual": {
+        "hasAccess": true,
+        "hasRefresh": true,
+        "email": null,
+        "verification": false
+      },
+      "passed": true
+    },
+    {
+      "id": "current profile",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "public profile",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "public profile privacy",
+      "expected": [
+        "userId",
+        "username"
+      ],
+      "actual": [
+        "userId",
+        "username"
+      ],
+      "passed": true
+    },
+    {
+      "id": "case-insensitive username login",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "wrong password",
+      "expected": {
+        "status": 401
+      },
+      "actual": {
+        "status": 401,
+        "code": "UNAUTHORIZED"
+      },
+      "passed": true
+    },
+    {
+      "id": "short password rejected",
+      "expected": {
+        "status": 422
+      },
+      "actual": {
+        "status": 422,
+        "code": "VALIDATION_ERROR"
+      },
+      "passed": true
+    },
+    {
+      "id": "BUG duplicate username must not claim account creation",
+      "expected": "409 conflict",
+      "actual": {
+        "status": 201,
+        "verification": false,
+        "hasTokens": false
+      },
+      "passed": false
+    },
+    {
+      "id": "BUG registered user ID must exist",
+      "expected": 200,
+      "actual": 404,
+      "passed": false
+    },
+    {
+      "id": "BUG oversized BCrypt password rejected as validation",
+      "expected": {
+        "status": 422
+      },
+      "actual": {
+        "status": 201
+      },
+      "passed": false
+    },
+    {
+      "id": "BUG multibyte BCrypt password rejected as validation",
+      "expected": {
+        "status": 422
+      },
+      "actual": {
+        "status": 201
+      },
+      "passed": false
+    },
+    {
+      "id": "BUG changed password suffix must not authenticate",
+      "expected": {
+        "status": 401
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": false
+    },
+    {
+      "id": "email registration stays pending",
+      "expected": {
+        "status": 201
+      },
+      "actual": {
+        "status": 201
+      },
+      "passed": true
+    },
+    {
+      "id": "pending email username login blocked",
+      "expected": {
+        "status": 403
+      },
+      "actual": {
+        "status": 403,
+        "code": "EMAIL_NOT_VERIFIED"
+      },
+      "passed": true
+    },
+    {
+      "id": "unknown recovery email neutral response",
+      "expected": {
+        "status": 204
+      },
+      "actual": {
+        "status": 204
+      },
+      "passed": true
+    },
+    {
+      "id": "invalid verification token",
+      "expected": {
+        "status": 400
+      },
+      "actual": {
+        "status": 400,
+        "code": "BAD_REQUEST"
+      },
+      "passed": true
+    },
+    {
+      "id": "invalid reset token",
+      "expected": {
+        "status": 400
+      },
+      "actual": {
+        "status": 400,
+        "code": "BAD_REQUEST"
+      },
+      "passed": true
+    },
+    {
+      "id": "stub media /v1/media/movie/603",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "stub media /v1/media/tv/1399",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "stub media /v1/media/search/movies?query=matrix",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "stub media /v1/media/search/tv?query=dark",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "stub media /v1/media/discover/movies/popular",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "stub media /v1/media/discover/tv/popular",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "stub media /v1/media/discover/movies/trending?window=day",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "stub media /v1/media/discover/tv/trending?window=week",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "stub media /v1/media/movie/603/recommendations",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "stub media /v1/media/tv/1399/recommendations",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "media cache second read",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "invalid media ID on GET",
+      "expected": {
+        "status": 422
+      },
+      "actual": {
+        "status": 422,
+        "code": "VALIDATION_ERROR"
+      },
+      "passed": true
+    },
+    {
+      "id": "blank media query",
+      "expected": {
+        "status": 422
+      },
+      "actual": {
+        "status": 422,
+        "code": "VALIDATION_ERROR"
+      },
+      "passed": true
+    },
+    {
+      "id": "invalid trending window",
+      "expected": {
+        "status": 400
+      },
+      "actual": {
+        "status": 400,
+        "code": "BAD_REQUEST"
+      },
+      "passed": true
+    },
+    {
+      "id": "admin sync forbidden to user",
+      "expected": {
+        "status": 403
+      },
+      "actual": {
+        "status": 403,
+        "code": "FORBIDDEN"
+      },
+      "passed": true
+    },
+    {
+      "id": "OpenAPI forbidden to user",
+      "expected": {
+        "status": 403
+      },
+      "actual": {
+        "status": 403,
+        "code": "FORBIDDEN"
+      },
+      "passed": true
+    },
+    {
+      "id": "anonymous review write rejected",
+      "expected": {
+        "status": 401
+      },
+      "actual": {
+        "status": 401,
+        "code": "UNAUTHORIZED"
+      },
+      "passed": true
+    },
+    {
+      "id": "create multiline review",
+      "expected": {
+        "status": 201
+      },
+      "actual": {
+        "status": 201
+      },
+      "passed": true
+    },
+    {
+      "id": "read review",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "filter reviews by user and media",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "persisted rating and pagination",
+      "expected": {
+        "rating": 8,
+        "total": 1
+      },
+      "actual": {
+        "rating": 8,
+        "total": 1
+      },
+      "passed": true
+    },
+    {
+      "id": "duplicate review rejected",
+      "expected": {
+        "status": 409
+      },
+      "actual": {
+        "status": 409,
+        "code": "CONFLICT"
+      },
+      "passed": true
+    },
+    {
+      "id": "invalid high rating",
+      "expected": {
+        "status": 422
+      },
+      "actual": {
+        "status": 422,
+        "code": "VALIDATION_ERROR"
+      },
+      "passed": true
+    },
+    {
+      "id": "BUG negative TMDB ID rejected on create",
+      "expected": {
+        "status": 422
+      },
+      "actual": {
+        "status": 201
+      },
+      "passed": false
+    },
+    {
+      "id": "BUG zero TMDB ID rejected on create",
+      "expected": {
+        "status": 422
+      },
+      "actual": {
+        "status": 201
+      },
+      "passed": false
+    },
+    {
+      "id": "BUG fractional rating rejected instead of truncation",
+      "expected": "400 or 422 without saving",
+      "actual": {
+        "status": 201,
+        "savedRating": 8
+      },
+      "passed": false
+    },
+    {
+      "id": "BUG multiline review can be edited",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 422,
+        "code": "VALIDATION_ERROR"
+      },
+      "passed": false
+    },
+    {
+      "id": "edit rating",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "BUG lowercase mediaType accepted consistently with URL",
+      "expected": {
+        "status": 201
+      },
+      "actual": {
+        "status": 400,
+        "code": "BAD_REQUEST"
+      },
+      "passed": false
+    },
+    {
+      "id": "second account",
+      "expected": {
+        "status": 201
+      },
+      "actual": {
+        "status": 201
+      },
+      "passed": true
+    },
+    {
+      "id": "ownership protects review update",
+      "expected": {
+        "status": 403
+      },
+      "actual": {
+        "status": 403,
+        "code": "FORBIDDEN"
+      },
+      "passed": true
+    },
+    {
+      "id": "ownership protects review deletion",
+      "expected": {
+        "status": 403
+      },
+      "actual": {
+        "status": 403,
+        "code": "FORBIDDEN"
+      },
+      "passed": true
+    },
+    {
+      "id": "create answer",
+      "expected": {
+        "status": 201
+      },
+      "actual": {
+        "status": 201
+      },
+      "passed": true
+    },
+    {
+      "id": "list answers",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "ownership protects answer update",
+      "expected": {
+        "status": 403
+      },
+      "actual": {
+        "status": 403,
+        "code": "FORBIDDEN"
+      },
+      "passed": true
+    },
+    {
+      "id": "answer owner can update",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "delete review with answer",
+      "expected": {
+        "status": 204
+      },
+      "actual": {
+        "status": 204
+      },
+      "passed": true
+    },
+    {
+      "id": "deleted review missing",
+      "expected": {
+        "status": 404
+      },
+      "actual": {
+        "status": 404,
+        "code": "NOT_FOUND"
+      },
+      "passed": true
+    },
+    {
+      "id": "answer cascade deletion",
+      "expected": {
+        "status": 404
+      },
+      "actual": {
+        "status": 404,
+        "code": "NOT_FOUND"
+      },
+      "passed": true
+    },
+    {
+      "id": "invalid review UUID",
+      "expected": {
+        "status": 400
+      },
+      "actual": {
+        "status": 400,
+        "code": "BAD_REQUEST"
+      },
+      "passed": true
+    },
+    {
+      "id": "invalid pagination",
+      "expected": {
+        "status": 422
+      },
+      "actual": {
+        "status": 422,
+        "code": "VALIDATION_ERROR"
+      },
+      "passed": true
+    },
+    {
+      "id": "BUG unknown route is 404",
+      "expected": {
+        "status": 404
+      },
+      "actual": {
+        "status": 500,
+        "code": "INTERNAL_ERROR"
+      },
+      "passed": false
+    },
+    {
+      "id": "BUG unsupported method is 405",
+      "expected": {
+        "status": 405
+      },
+      "actual": {
+        "status": 500,
+        "code": "INTERNAL_ERROR"
+      },
+      "passed": false
+    },
+    {
+      "id": "lowercase media route rate limited",
+      "expected": {
+        "status": 429
+      },
+      "actual": {
+        "status": 429,
+        "code": "RATE_LIMITED"
+      },
+      "passed": true
+    },
+    {
+      "id": "BUG uppercase media route must share rate limit",
+      "expected": {
+        "status": 429
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": false
+    },
+    {
+      "id": "refresh rotates session",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "old access token invalid after refresh",
+      "expected": {
+        "status": 401
+      },
+      "actual": {
+        "status": 401,
+        "code": "UNAUTHORIZED"
+      },
+      "passed": true
+    },
+    {
+      "id": "rotated access token works",
+      "expected": {
+        "status": 200
+      },
+      "actual": {
+        "status": 200
+      },
+      "passed": true
+    },
+    {
+      "id": "refresh replay rejected",
+      "expected": {
+        "status": 401
+      },
+      "actual": {
+        "status": 401,
+        "code": "UNAUTHORIZED"
+      },
+      "passed": true
+    },
+    {
+      "id": "replay compromises descendant session",
+      "expected": {
+        "status": 401
+      },
+      "actual": {
+        "status": 401,
+        "code": "UNAUTHORIZED"
+      },
+      "passed": true
+    },
+    {
+      "id": "logout",
+      "expected": {
+        "status": 204
+      },
+      "actual": {
+        "status": 204
+      },
+      "passed": true
+    },
+    {
+      "id": "logout invalidates access",
+      "expected": {
+        "status": 401
+      },
+      "actual": {
+        "status": 401,
+        "code": "UNAUTHORIZED"
+      },
+      "passed": true
+    },
+    {
+      "id": "HTTP provider without TMDB token fails at startup",
+      "expected": "configuration failure before accepting requests",
+      "actual": {
+        "exitCode": 1,
+        "missingTokenMessage": true
+      },
+      "passed": true
+    }
+  ]
+}
