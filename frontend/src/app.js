@@ -1,6 +1,8 @@
 import '@fontsource-variable/inter/wght.css';
 import './styles.css';
-import {api,USE_MOCK} from './echo-api.js';
+import {api,USE_MOCK,API_BASE} from './echo-api.js';
+import {initializeAnalytics,getReviewFormInstanceId,resetReviewForm} from './analytics.js';
+import {initializeMetrica} from './metrika.js';
 import {avatars,posters} from './placeholders.js';
 import echoMark from './assets/echo-mark.png';
 
@@ -432,17 +434,17 @@ function reviewCard(r,context='release'){
  const filmMeta=[movie.year,movie.director].filter(Boolean).map(escapeHtml).join(' · ');
  if(context==='profile'){
   const badge=isOwnReview(r)||r.published===false?`<div class="review-status-row">${moderationBadge(r)}</div>`:'';
-  return `<article class="review profile-review ${r.published===false?'is-pending':''}"><div class="profile-review-head"><button class="profile-review-film" data-movie="${r.movieId}"><img src="${movie.poster}" alt=""><span><strong>${escapeHtml(movie.title)}</strong><em>${escapeHtml(movie.director||'')}</em></span></button>${reviewRating}</div>${badge}<h3>${escapeHtml(r.title)}</h3>${content}${reviewFooter(r)}</article>`;
+  return `<article data-analytics-review-id="${r.id}" class="review profile-review ${r.published===false?'is-pending':''}"><div class="profile-review-head"><button class="profile-review-film" data-movie="${r.movieId}"><img src="${movie.poster}" alt=""><span><strong>${escapeHtml(movie.title)}</strong><em>${escapeHtml(movie.director||'')}</em></span></button>${reviewRating}</div>${badge}<h3>${escapeHtml(r.title)}</h3>${content}${reviewFooter(r)}</article>`;
  }
  if(context==='own')return `<article class="review own-review ${r.published===false?'is-pending':''}"><div class="review-top">${reviewPerson(r,'div')}${reviewRating}</div><h3>${escapeHtml(r.title)}</h3>${content}${r.published===false?'':reviewFooter(r)}</article>`;
- if(context==='home')return `<article class="review review-home ${isLong&&expanded?'review-home-expanded':'review-home-compact'}"><div class="review-home-top">${reviewPerson(r)}${reviewRating}</div><button class="review-film-mini" data-movie="${movie.id}"><img src="${movie.poster}" alt=""><span><strong>${escapeHtml(movie.title)}</strong><em>${filmMeta}</em></span></button><h3>${escapeHtml(r.title)}</h3>${content}${reviewFooter(r)}</article>`;
- return `<article class="review ${context==='feed'?'review-feed':''}"><div class="review-top">${reviewPerson(r)}${reviewRating}</div>${context==='feed'?`<button class="review-film-context" data-movie="${movie.id}"><img src="${movie.poster}" alt=""><span><strong>${escapeHtml(movie.title)}</strong><em>${filmMeta}</em></span></button>`:''}<h3>${escapeHtml(r.title)}</h3>${content}${reviewFooter(r)}</article>`
+ if(context==='home')return `<article data-analytics-review-id="${r.id}" class="review review-home ${isLong&&expanded?'review-home-expanded':'review-home-compact'}"><div class="review-home-top">${reviewPerson(r)}${reviewRating}</div><button class="review-film-mini" data-movie="${movie.id}"><img src="${movie.poster}" alt=""><span><strong>${escapeHtml(movie.title)}</strong><em>${filmMeta}</em></span></button><h3>${escapeHtml(r.title)}</h3>${content}${reviewFooter(r)}</article>`;
+ return `<article data-analytics-review-id="${r.id}" class="review ${context==='feed'?'review-feed':''}"><div class="review-top">${reviewPerson(r)}${reviewRating}</div>${context==='feed'?`<button class="review-film-context" data-movie="${movie.id}"><img src="${movie.poster}" alt=""><span><strong>${escapeHtml(movie.title)}</strong><em>${filmMeta}</em></span></button>`:''}<h3>${escapeHtml(r.title)}</h3>${content}${reviewFooter(r)}</article>`
 }
 
 function authorCommentCard(movie){
  const c=movie.authorComment;if(!c)return'';
  const filmMeta=[movie.year,movie.director].filter(Boolean).map(escapeHtml).join(' · ');
- return `<article class="comment-card"><button class="comment-film" data-movie="${movie.id}"><img src="${movie.poster}" alt=""><span><strong>${escapeHtml(movie.title)}</strong><em>${filmMeta}</em></span></button><button class="person author-comment-person" data-author-name="${escapeHtml(c.author)}">${avatarImg(c.avatar||getAuthorProfile(c.author).image,c.author)}<div><strong>${escapeHtml(c.author)}</strong><span style="color:var(--amber)">${escapeHtml(c.role||'Автор')}</span></div></button><h3>${escapeHtml(c.title||'Комментарий автора')}</h3><p>«${escapeHtml(c.text)}»</p><footer>${commentLike(movie.id,c.likes)}<span>${escapeHtml(c.date||'')}</span></footer></article>`
+ return `<article class="comment-card"${analyticsCommentAttrs(c,movie.id)}><button class="comment-film" data-movie="${movie.id}"><img src="${movie.poster}" alt=""><span><strong>${escapeHtml(movie.title)}</strong><em>${filmMeta}</em></span></button><button class="person author-comment-person" data-author-name="${escapeHtml(c.author)}">${avatarImg(c.avatar||getAuthorProfile(c.author).image,c.author)}<div><strong>${escapeHtml(c.author)}</strong><span style="color:var(--amber)">${escapeHtml(c.role||'Автор')}</span></div></button><h3>${escapeHtml(c.title||'Комментарий автора')}</h3><p>«${escapeHtml(c.text)}»</p><footer>${commentLike(movie.id,c.likes)}<span>${escapeHtml(c.date||'')}</span></footer></article>`
 }
 
 /* ===== v10.32: мобильная версия — шапка, нижняя панель, «назад» (см. MOBILE.md) ===== */
@@ -655,7 +657,7 @@ function moviePage(){
  const c=m.authorComment;
  return siteShell(`<main class="page">${echoMovieSummary(m)}
 <section class="crew-section"><div class="section-head"><div class="crew-heading"><span class="eyebrow">Съёмочная группа</span><div class="tabs" role="tablist" aria-label="Съёмочная группа"><button role="tab" aria-selected="${state.crewTab==='actors'}" data-crew-tab="actors" class="${state.crewTab==='actors'?'active':''}">Актёры</button><button role="tab" aria-selected="${state.crewTab==='team'}" data-crew-tab="team" class="${state.crewTab==='team'?'active':''}">Команда</button></div></div><div class="crew-controls"><button class="slider-btn" data-crew-move="-1" aria-label="Прокрутить назад">←</button><button class="slider-btn" data-crew-move="1" aria-label="Прокрутить вперёд">→</button></div></div><div class="crew-track" id="crewTrack">${(m.crew?.[state.crewTab]||[]).map(([name,role,img])=>`<button class="crew-card clickable-author" data-author-name="${escapeHtml(name)}">${avatarImg(img,name)}<strong>${escapeHtml(name)}</strong><span>${escapeHtml(state.crewTab==='team'?ruRole(role):role||'')}</span><em>Открыть профиль →</em></button>`).join('')||'<p class="muted crew-empty">Состав пока не добавлен.</p>'}</div></section>
-${c?`<section class="author-note"><div class="author-note-head"><div><span>АВТОРСКИЙ КОММЕНТАРИЙ</span><h3>${escapeHtml(c.title||'Комментарий к фильму')}</h3><p class="author-by"><button class="author-inline-link author-inline-link--amber" data-author-name="${escapeHtml(c.author)}">${escapeHtml(c.author)}</button> · ${escapeHtml(c.role||'Автор')}</p></div></div><p>«${escapeHtml(c.text)}»</p><footer>${commentLike(m.id,c.likes)}<span>${escapeHtml(c.date||'')}</span></footer></section>`:''}
+${c?`<section class="author-note"${analyticsCommentAttrs(c,m.id)}><div class="author-note-head"><div><span>АВТОРСКИЙ КОММЕНТАРИЙ</span><h3>${escapeHtml(c.title||'Комментарий к фильму')}</h3><p class="author-by"><button class="author-inline-link author-inline-link--amber" data-author-name="${escapeHtml(c.author)}">${escapeHtml(c.author)}</button> · ${escapeHtml(c.role||'Автор')}</p></div></div><p>«${escapeHtml(c.text)}»</p><footer>${commentLike(m.id,c.likes)}<span>${escapeHtml(c.date||'')}</span></footer></section>`:''}
 ${state.authorLogged?authorComposerNote():own?ownReviewPanel(own):reviewComposer(m)}
 ${state.authorLogged?'':`<button class="m-fab m-only" data-m-fab="${own?'ownReview':'reviewComposer'}">${own?ICON.chat:ICON.star}<span>${own?'Ваша рецензия':ownRatingFor(m.id)?'Дописать рецензию':'Оценить фильм'}</span></button>`}
 <section class="section reading review-reading"><div class="toolbar"><h2>Рецензии</h2><div class="profile-sort"><span>Сортировка</span><select id="movieSort" aria-label="Сортировка рецензий"><option ${state.movieSort==='Новые'?'selected':''}>Новые</option><option ${state.movieSort==='Популярные'?'selected':''}>Популярные</option><option ${state.movieSort==='Старые'?'selected':''}>Старые</option></select></div></div><div class="review-list">${list.map(r=>reviewCard(r)).join('')||'<div class="panel muted empty-state">Рецензий пока нет. Станьте первым, кто напишет о фильме.</div>'}</div></section></main>`)
@@ -975,11 +977,41 @@ document.addEventListener('click',e=>{
  showTip(el,el.dataset.tooltip||el.dataset.tip||(el.dataset.paramLabel?`${el.dataset.paramLabel}: ${el.textContent.trim()}`:''));
 },true);
 addEventListener('scroll',hideTip,{passive:true,capture:true});addEventListener('resize',hideTip);
+/* ── Аналитика (v10.40) ──────────────────────────────────────────────────────────────
+   Только наблюдение за отрисованным интерфейсом: разметка и стили не меняются.
+   События с записью в БД (регистрация, вход, оценка, рецензия, лайк) фиксирует бэкенд. */
+const analytics=initializeAnalytics({
+ apiBase:API_BASE,env:import.meta.env.VITE_ANALYTICS_ENV,testUserIds:import.meta.env.VITE_ANALYTICS_TEST_USER_IDS,
+ getMovieId:index=>api.analyticsMovieId(index),
+ getReview:id=>{const r=REVIEWS.find(x=>String(x.id)===String(id));if(!r)return null;const apiId=api.analyticsReviewId(r.id);return apiId===null?null:{...r,apiId}}
+});
+const metrika=initializeMetrica({id:import.meta.env.VITE_YANDEX_METRIKA_ID});
+function analyticsCommentAttrs(c,movieIndex){
+ const filmId=api.analyticsMovieId(movieIndex);
+ return c?.id!=null&&filmId!=null?` data-analytics-comment-id="${escapeHtml(String(c.id))}" data-analytics-film-id="${filmId}"`:'';
+}
+function analyticsSnapshot(){
+ const media=state.page==='otherProfile'&&USER_PROFILES[state.otherUser]?.kind==='media';
+ const map={home:'home',catalog:'catalog',search:'search',movie:'film',profile:'profile',otherProfile:media?'media_profile':'profile',authorProfile:'author_profile'};
+ const pageType=state.view==='site'?map[state.page]||null:null;
+ const filmId=pageType==='film'?api.analyticsMovieId(state.movieId):null;
+ const owner=state.page==='profile'?state.user?.id??null:state.page==='otherProfile'?USER_PROFILES[state.otherUser]?.id??null:null;
+ const identity=pageType==='film'?String(filmId??state.movieId):pageType==='author_profile'?String(state.authorName||''):
+  state.page==='otherProfile'?String(owner??state.otherUser??''):state.page==='profile'?'self':'';
+ return {pageType,routeKey:`${state.view}:${state.page}:${identity}`,filmId,profileOwnerId:owner,
+  userId:state.userLogged?state.user?.id??null:null,root:document.getElementById('root')};
+}
+function trackRender(){
+ try{
+  const route=analyticsSnapshot();analytics.route(route);
+  metrika.pageView({...route,view:state.view,page:state.page,userAuth:state.userAuth,authorAuth:state.authorAuth,studioPage:state.studioPage});
+ }catch(_){/* аналитика никогда не ломает интерфейс */}
+}
 function render(){
  /* Поле, в котором сейчас печатают, остаётся в фокусе с тем же положением курсора после перерисовки. */
  hideTip();
  const a=document.activeElement,keep=a&&a.id&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA')?{id:a.id,s:a.selectionStart,e:a.selectionEnd}:null;
- document.getElementById('root').innerHTML=pageHtml();bind();syncHistory();
+ document.getElementById('root').innerHTML=pageHtml();bind();syncHistory();trackRender();
  if(keep){const n=document.getElementById(keep.id);if(n&&n.offsetParent!==null&&document.activeElement!==n){n.focus({preventScroll:true});try{n.setSelectionRange(keep.s,keep.e)}catch(_){}}}
 }
 /* Частичное обновление: меняются только указанные блоки, прокрутка и позиция взгляда не сбиваются. */
@@ -987,7 +1019,7 @@ function patch(...selectors){
  const tmp=document.createElement('div');tmp.innerHTML=pageHtml();
  const y=scrollY;
  for(const sel of selectors){const now=document.querySelector(sel),next=tmp.querySelector(sel);if(!now||!next){render();return}now.replaceWith(next)}
- bind();
+ bind();trackRender();
  if(scrollY!==y)scrollTo(0,y);
 }
 
@@ -1164,7 +1196,8 @@ function bind(){
     return;
    }
    confirm.disabled=true;
-   api.publishReview({movieId:draft.movieId,title:title||'Без заголовка',text:body,parts,spoiler:confirmedSpoiler}).then(saved=>{
+   api.publishReview({movieId:draft.movieId,title:title||'Без заголовка',text:body,parts,spoiler:confirmedSpoiler,formInstanceId:getReviewFormInstanceId()}).then(saved=>{
+    resetReviewForm();
     const review=saved||{id:Date.now(),movieId:draft.movieId,...reviewerIdentity(),total,parts,title:title||'Без заголовка',text:body,likes:0,date:todayRu(),spoiler:confirmedSpoiler,popular:0,authorLikes:[],published:false,moderation:'PENDING_MODERATION'};
     if(state.user){review.userId=review.userId||state.user.id;review.user=review.user||state.user.nickname;review.avatar=review.avatar||state.user.avatar}
     if(review.published)REVIEWS.unshift(review);else PENDING_REVIEWS.unshift(review);

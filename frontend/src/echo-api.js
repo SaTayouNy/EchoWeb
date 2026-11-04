@@ -1,4 +1,5 @@
 import {createMockData} from './mock-data.js';
+import {getAnalyticsIdentity} from './analytics.js';
 
 const BASE=(import.meta.env.VITE_API_URL||'').replace(/\/+$/,'');
 const TMDB_IMAGE_PREFIX='https://image.tmdb.org/t/p/';
@@ -9,6 +10,8 @@ const tmdbImage=url=>{
  return /^w500\/[A-Za-z0-9_-]+\.(?:jpe?g|png|webp)$/.test(path)?`/tmdb-images/${path}`:url;
 };
 export const USE_MOCK=!BASE;
+/* Адрес API для отправки событий аналитики (POST {BASE}/events). Пусто в демо-режиме. */
+export const API_BASE=BASE;
 const TOKEN_KEY='echo-session-v1';
 const PARAMS=['dramaturgy_structure','characters_performance','visual_language','sound_music','impression'];
 let tokens=null,refreshPending=null,mock=null,currentUser=null;
@@ -276,16 +279,16 @@ export const api={
  async userAuth(mode,{login,password}){
   if(USE_MOCK)return {user:mock.demoUser};
   if(mode==='register'){
-   const result=await request('/v1/auth/register',{method:'POST',body:{username:login,password},auth:false});saveTokens(result.tokens);
-  }else saveTokens(await request('/v1/auth/login',{method:'POST',body:{username:login,password},auth:false}));
+   const result=await request('/v1/auth/register',{method:'POST',body:{username:login,password,...getAnalyticsIdentity()},auth:false});saveTokens(result.tokens);
+  }else saveTokens(await request('/v1/auth/login',{method:'POST',body:{username:login,password,...getAnalyticsIdentity()},auth:false}));
   const session=await loadSession();
   if(session?.role==='author'){saveTokens(null);throw new ApiError('Для этого аккаунта используйте вход автора',403)}
   return {user:session?.user};
  },
  async authorAuth(mode,{login,password,name,specialty}){
   if(USE_MOCK)return {author:{name:mock.demoAuthor}};
-  if(mode==='register')return request('/v1/author/apply',{method:'POST',body:{login,password,name,specialty},auth:false});
-  saveTokens(await request('/v1/author/login',{method:'POST',body:{login,password},auth:false}));
+  if(mode==='register')return request('/v1/author/apply',{method:'POST',body:{login,password,name,specialty,...getAnalyticsIdentity()},auth:false});
+  saveTokens(await request('/v1/author/login',{method:'POST',body:{login,password,...getAnalyticsIdentity()},auth:false}));
   const session=await loadSession();
   if(session?.role!=='author'){saveTokens(null);throw new ApiError('Заявка автора ещё не подтверждена',403)}
   return {author:session.author};
@@ -310,16 +313,19 @@ export const api={
   for(const item of chosen)if(!existing.has(key(item)))await request(`/v1/me/preferences/${item.type}/${item.id}`,{method:'PUT',
    ...(item.type==='MOVIE'?{}:{body:{sourceMediaType:item.sourceMediaType,sourceTmdbId:item.sourceTmdbId}})});
  },
- async publishReview({movieId,title,text,parts,spoiler}){
+ async publishReview({movieId,title,text,parts,spoiler,formInstanceId=null}){
   if(USE_MOCK)return null;
   const rating=await rate(movieId,parts);
-  const created=await request('/v2/reviews',{method:'POST',body:{tmdbId:movieId===undefined?null:movieIds[movieId],mediaType:'MOVIE',title,content:text,draft:false,spoiler}});
+  const created=await request('/v2/reviews',{method:'POST',body:{tmdbId:movieId===undefined?null:movieIds[movieId],mediaType:'MOVIE',title,content:text,draft:false,spoiler,...(formInstanceId?{form_instance_id:formInstanceId}:{})}});
   reviewIds.push(created.reviewId);
   const review=uiReview(created,{[currentUser.userId]:{nickname:currentUser.username,avatar:currentUser.avatarUrl}});
   review.total=rating.finalScore;review.parts=parts;
   return review;
  },
  async saveRating({movieId,parts}){return USE_MOCK?null:rate(movieId,parts)},
+ /* Аналитика: настоящие ID фильма (TMDB) и рецензии (UUID) по внутренним номерам интерфейса. */
+ analyticsMovieId(index){return movieId(index)??null},
+ analyticsReviewId(id){return USE_MOCK?id:(reviewIds[id]??null)},
  async setReviewLike(id,liked){if(!USE_MOCK)await request(`/v2/reviews/${reviewIds[id]}/like`,{method:liked?'PUT':'DELETE'})},
  async setAuthorLike(id,liked){if(!USE_MOCK)await request(`/v1/author/reviews/${reviewIds[id]}/like`,{method:liked?'PUT':'DELETE'})},
  async publishAuthorComment({movieId,title,text}){return USE_MOCK?null:request(`/v1/author/movies/${movieId===undefined?null:movieIds[movieId]}/comment`,{method:'PUT',body:{title,text}})},

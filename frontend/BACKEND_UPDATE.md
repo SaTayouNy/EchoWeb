@@ -1,18 +1,19 @@
-# Эхо — что сделать бэкенду (frontend-v10.39)
+# Эхо — что сделать бэкенду (frontend-v10.40)
 
 Актуальный контракт — `API_LIVE.md` и `src/echo-api.js`. Файлы `BACKEND.md` и `API.md` описывают старую схему (cookie, `/movies`, `/auth/me`) и **устарели**; правило «автор не ставит обычные лайки» в них тоже устарело.
 
 ## 1. Обновить интеграцию (по порядку)
 
-1. **Заменить фронт.** В репозитории бэкенда содержимое `frontend/` заменить папкой `frontend-v10.39/` (без `node_modules/`). Затем `docker compose up --build -d web` или, для готовой статики, взять `dist/` (собран с `VITE_API_URL=/api`). `src/echo-api.js` и пути запросов не менялись.
-2. **Обычные лайки от автора** — см. задачу B-9 в разделе 5.
-3. **Баллы статуса** (если считаете на сервере): `givenLikes×5 + receivedLikes×10 + ratings×50 + reviews×250 + authorLikesReceived×1000`.
-4. **Профиль** (`/v1/me/profile`, `/v1/users/{id}/profile`):
+1. **Заменить фронт.** В репозитории бэкенда содержимое `frontend/` заменить папкой `frontend-v10.40/` (без `node_modules/`). Затем `docker compose up --build -d web` или, для готовой статики, взять `dist/` (собран с `VITE_API_URL=/api`, `VITE_ANALYTICS_ENV=production`, `VITE_YANDEX_METRIKA_ID=114072239`). Пути запросов не менялись; в вход, регистрацию и отправку рецензии добавлены необязательные поля аналитики, которые текущий бэкенд игнорирует.
+2. **Аналитика (новое в v10.40).** Фронт отправляет события на `POST /api/events` (в Spring — `POST /events`). Эндпоинта и таблицы пока нет. Задачи A-1…A-5 и статус — в `ANALYTICS.md`. До их выполнения сайт работает как v10.39.
+3. **Обычные лайки от автора** — см. задачу B-9 в разделе 5.
+4. **Баллы статуса** (если считаете на сервере): `givenLikes×5 + receivedLikes×10 + ratings×50 + reviews×250 + authorLikesReceived×1000`.
+5. **Профиль** (`/v1/me/profile`, `/v1/users/{id}/profile`):
    - `statistics.givenLikes` обязателен, иначе баллы за лайки не считаются;
    - в `ratings[]` нужны пять параметров (`parameters`, `rating.parameters` или `ratingParameters`) с кодами `dramaturgy_structure`, `characters_performance`, `visual_language`, `sound_music`, `impression`, иначе в профиле виден только итог.
-5. **`GET /v1/site/movies/{tmdbId}/scores`.** Нужны три группы `reviews`, `ratings`, `critics`, у каждой `total` и `parts` (5 чисел в порядке: драматургия, персонажи, визуал, звук, впечатление), плюс `ratingsCount`. Если групп или `parts` нет — блок показывает «—» без параметров. Из этих же данных строятся оценки в Эхо Studio и средние оценки работ автора.
-6. **Рецензии** (`/v2/reviews`, `/v2/reviews/mine`): поля `userId`, `status` (`PENDING_MODERATION` / `PUBLISHED` / `REJECTED`), `rating.parameters` и `likes`. У собственной отклонённой рецензии нужен `REJECTED`.
-7. **Автор:** `GET /v1/author/me` отдаёт объект с `name`; ответ `POST /v1/author/apply` может быть любым (интерфейс всегда показывает успех заявки, ошибку — сообщением).
+6. **`GET /v1/site/movies/{tmdbId}/scores`.** Нужны три группы `reviews`, `ratings`, `critics`, у каждой `total` и `parts` (5 чисел в порядке: драматургия, персонажи, визуал, звук, впечатление), плюс `ratingsCount`. Если групп или `parts` нет — блок показывает «—» без параметров. Из этих же данных строятся оценки в Эхо Studio и средние оценки работ автора.
+7. **Рецензии** (`/v2/reviews`, `/v2/reviews/mine`): поля `userId`, `status` (`PENDING_MODERATION` / `PUBLISHED` / `REJECTED`), `rating.parameters` и `likes`. У собственной отклонённой рецензии нужен `REJECTED`.
+8. **Автор:** `GET /v1/author/me` отдаёт объект с `name`; ответ `POST /v1/author/apply` может быть любым (интерфейс всегда показывает успех заявки, ошибку — сообщением).
 
 ## 2. nginx и сеть
 
