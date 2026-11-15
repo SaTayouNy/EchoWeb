@@ -1,0 +1,859 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Эхо — для авторов кино</title>
+<meta name="description" content="Эхо — сообщество людей, которые смотрят кино внимательно. Авторы видят, как их работа отзывается в зрителях.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56'%3E%3Crect width='56' height='56' rx='12' fill='%23b3a7e0'/%3E%3Cellipse cx='21' cy='26' rx='7' ry='10' transform='rotate(-28 21 26)' fill='none' stroke='%230e1016' stroke-width='2.5'/%3E%3Cellipse cx='35' cy='26' rx='7' ry='10' transform='rotate(28 35 26)' fill='none' stroke='%230e1016' stroke-width='2.5'/%3E%3Crect x='24.5' y='17' width='7' height='24' rx='3.5' fill='%230e1016'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Onest:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===== ECHO — New Design System: токены (New / Primitives → Semantic → Size) ===== */
+:root{
+  color-scheme:dark;
+  /* bg */
+  --bg-page:#0e1016; --bg-raised:#12141c; --card-solid:#151820;
+  /* surface */
+  --surface-card:rgba(28,31,42,.5); --surface-header:rgba(14,16,22,.72); --surface-popover:#1c1f2a; --surface-chip:rgba(232,233,239,.06);
+  /* border */
+  --border-default:rgba(232,233,239,.1); --border-strong:rgba(232,233,239,.18);
+  /* text */
+  --text-primary:#e8e9ef; --text-secondary:#c7cad4; --text-muted:#a3a8b6; --text-faint:#7d8292; --text-on-accent:#0e1016;
+  /* action / brand */
+  --accent-brand:#b3a7e0; --action-primary:#b3a7e0; --action-primary-hover:#c2b8e8; --action-link:#b3a7e0; --focus-ring:#b3a7e0;
+  /* role/author */
+  --role-author:#ffad61; --role-author-block-bg:rgba(255,173,97,.02); --role-author-block-border:rgba(255,173,97,.5);
+  --role-author-tag-bg:rgba(255,173,97,.08); --role-author-tag-border:rgba(255,173,97,.3);
+  /* score */
+  --score-reviews:#f2849f; --score-reviews-bg:rgba(242,132,159,.03); --score-reviews-plate:rgba(242,132,159,.12); --score-reviews-border:rgba(242,132,159,.32);
+  --score-ratings:#a897f2; --score-ratings-bg:rgba(168,151,242,.03); --score-ratings-plate:rgba(168,151,242,.12); --score-ratings-border:rgba(168,151,242,.32);
+  --score-critics:#7fd4e3; --score-critics-bg:rgba(127,212,227,.03); --score-critics-plate:rgba(127,212,227,.12); --score-critics-border:rgba(127,212,227,.32);
+  /* graphic / status */
+  --status-azure:#8ec5ff; --graphic-firefly:#9ccbd4; --graphic-firefly-wing:rgba(156,203,212,.22); --graphic-firefly-line:rgba(156,203,212,.36);
+  --status-success:#9fd3b0; --status-error:#e88f8f;
+  /* size */
+  --radius-4:4px; --radius-8:8px; --radius-10:10px; --radius-12:12px; --radius-14:14px; --radius-16:16px; --radius-20:20px; --radius-full:999px;
+  --space-4:4px; --space-8:8px; --space-12:12px; --space-16:16px; --space-20:20px; --space-24:24px; --space-32:32px; --space-40:40px; --space-48:48px; --space-64:64px; --space-96:96px; --space-128:128px;
+  /* fonts */
+  --f-ed:"Onest",Inter,ui-sans-serif,system-ui,sans-serif; --f-ui:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  /* layout */
+  --page-pad:var(--space-64); --content:1312px; --sec-pad:var(--space-128);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:104px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg-page);color:var(--text-primary);font:400 16px/1.5 var(--f-ui);overflow-x:hidden}
+img,svg{display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+h1,h2,h3,h4,p{margin:0}
+:focus-visible{outline:2px solid var(--focus-ring);outline-offset:3px;border-radius:var(--radius-8)}
+.wrap{width:100%;max-width:calc(var(--content) + 2*var(--page-pad));margin:0 auto;padding:0 var(--page-pad)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ===== Текстовые стили ===== */
+.t-display{font:600 112px/1 var(--f-ed);letter-spacing:-.035em}
+.t-h2{font:600 56px/1.08 var(--f-ed);letter-spacing:-.03em}
+.t-lead{font:400 24px/1.4 var(--f-ed);color:var(--text-muted)}
+.t-eyebrow{font:500 16px/1.4 var(--f-ed);color:var(--role-author)}
+.t-ui-h3{font:600 24px/1.3 var(--f-ui);letter-spacing:-.01em}
+.t-ui-h4{font:600 20px/1.3 var(--f-ui)}
+.t-body{font:400 16px/1.5 var(--f-ui)}
+.t-strong{font:600 16px/1.5 var(--f-ui)}
+.t-label{font:500 16px/1.4 var(--f-ui)}
+.t-caption{font:400 14px/1.4 var(--f-ui)}
+.t-stat{font:600 27px/1.1 var(--f-ui);letter-spacing:-.01em}
+.t-score{font:600 32px/1 var(--f-ui);letter-spacing:-.02em}
+.t-part{font:500 14px/1 var(--f-ui)}
+.muted{color:var(--text-muted)} .faint{color:var(--text-faint)} .secondary{color:var(--text-secondary)} .author{color:var(--role-author)}
+.num{font-variant-numeric:tabular-nums}
+
+/* ===== Иконки ===== */
+.ic{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.ic-24{width:24px;height:24px}
+
+/* ===== Button ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-8);padding:12px 20px;border-radius:var(--radius-14);border:1px solid transparent;font:500 16px/1.2 var(--f-ed);white-space:nowrap;transition:background-color .15s,border-color .15s,opacity .15s,transform .15s}
+.btn .ic{width:20px;height:20px}
+.btn-l{padding:16px 24px}
+.btn-s{padding:8px 16px}
+.btn-primary{background:var(--action-primary);color:var(--text-on-accent)}
+.btn-primary:hover{background:var(--action-primary-hover)}
+.btn-author{background:var(--role-author);color:var(--text-on-accent)}
+.btn-author:hover{opacity:.9}
+.btn-secondary{border-color:var(--border-strong);color:var(--text-primary)}
+.btn-secondary:hover{background:var(--surface-chip)}
+.btn-ghost{color:var(--action-link)}
+.btn-ghost:hover{background:var(--surface-chip)}
+.btn:active{transform:translateY(1px)}
+
+/* ===== Tag / Badge / Avatar / Plate ===== */
+.tag{display:inline-flex;align-items:center;gap:var(--space-4);padding:4px 8px;border-radius:var(--radius-8);border:1px solid var(--border-default);background:var(--surface-chip);font:400 14px/1.4 var(--f-ui);color:var(--text-secondary);white-space:nowrap}
+.tag-author{border-color:var(--role-author-tag-border);background:var(--role-author-tag-bg);color:var(--role-author)}
+.badge{display:inline-flex;align-items:center;gap:var(--space-8);padding:8px 16px;border-radius:var(--radius-full);border:1px solid var(--border-default);background:var(--surface-card);font:400 14px/1.4 var(--f-ui);color:var(--text-secondary)}
+.badge i{width:6px;height:6px;border-radius:50%;background:var(--graphic-firefly)}
+.badge-author{border-color:var(--role-author-tag-border);background:var(--role-author-tag-bg);color:var(--role-author)}
+.badge-author i{background:var(--role-author)}
+.avatar{flex:none;width:40px;height:40px;border-radius:50%;overflow:hidden;background:var(--surface-chip);border:1px solid var(--border-default);display:grid;place-items:center;font:600 16px/1 var(--f-ui);color:var(--text-secondary)}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.avatar.is-author{border:1.5px solid var(--role-author)}
+.avatar-l{width:56px;height:56px}
+.plate{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:22px;padding:0 8px;border-radius:var(--radius-8);background:var(--surface-chip);font:500 14px/1 var(--f-ui);color:var(--text-primary);font-variant-numeric:tabular-nums;min-width:25px}
+.plate-author{background:var(--role-author-tag-bg);color:var(--role-author)}
+.plate-ratings{background:var(--score-ratings-plate);color:var(--score-ratings)}
+.score-chip{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:34px;padding:0 8px;border-radius:var(--radius-8);border:1px solid;font:600 16px/1.5 var(--f-ui);font-variant-numeric:tabular-nums}
+.k-reviews{--k:var(--score-reviews);--k-bg:var(--score-reviews-bg);--k-plate:var(--score-reviews-plate);--k-border:var(--score-reviews-border)}
+.k-ratings{--k:var(--score-ratings);--k-bg:var(--score-ratings-bg);--k-plate:var(--score-ratings-plate);--k-border:var(--score-ratings-border)}
+.k-critics{--k:var(--score-critics);--k-bg:var(--score-critics-bg);--k-plate:var(--score-critics-plate);--k-border:var(--score-critics-border)}
+.score-chip{color:var(--k);background:var(--k-plate);border-color:var(--k-border)}
+
+/* ===== Card ===== */
+.card{border:1px solid var(--border-default);border-radius:var(--radius-20);background:var(--surface-card);padding:var(--space-32)}
+.card-author{border-color:var(--role-author-block-border);background:var(--role-author-block-bg)}
+.stack{display:flex;flex-direction:column}
+
+/* ===== Header ===== */
+.head{position:sticky;top:0;z-index:100;background:var(--surface-header);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid var(--border-default)}
+.head .wrap{display:flex;align-items:center;justify-content:space-between;gap:var(--space-16);padding-top:var(--space-16);padding-bottom:var(--space-16)}
+.logo{display:inline-flex;align-items:center;gap:var(--space-12)}
+.logo-tile{width:40px;height:40px;border-radius:var(--radius-8);background:var(--accent-brand);display:grid;place-items:center}
+.logo-tile svg{width:29px;height:29px}
+.logo b{font:500 24px/1.2 var(--f-ed)}
+
+/* ===== Hero ===== */
+.hero{position:relative;overflow:hidden}
+.hero .wrap{position:relative;display:flex;flex-direction:column;gap:var(--space-48);padding-top:var(--space-48);padding-bottom:var(--space-64)}
+#feedback{padding-top:0}
+.hero-copy{display:flex;flex-direction:column;gap:var(--space-24);max-width:1000px}
+.hero .t-display span{color:var(--accent-brand)}
+.hero .t-lead{max-width:720px}
+.hero-act{position:relative;align-self:stretch;z-index:1;margin-top:var(--space-16)}
+.glass{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:var(--space-12);padding:var(--space-24);border:1px solid var(--border-default);border-radius:var(--radius-16);background:var(--surface-card);-webkit-backdrop-filter:blur(28px);backdrop-filter:blur(28px)}
+.fly{position:absolute;z-index:0;width:clamp(180px,22vw,260px);right:8%;bottom:calc(100% - 24px);pointer-events:none;animation:hover 7s ease-in-out infinite}
+@keyframes hover{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(10px,-14px) rotate(3deg)}}
+
+/* ===== Секции ===== */
+.sec{padding:var(--sec-pad) 0}
+.sec+.sec{padding-top:0}
+.sh{display:flex;flex-direction:column;gap:var(--space-16);margin-bottom:var(--space-48)}
+.sh .t-lead{max-width:860px}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-24);align-items:stretch}
+.cols.mid{align-items:center}
+#feedback .cols{align-items:start}
+.cap{margin-top:var(--space-24)}
+
+/* ===== Card / Review ===== */
+.review{display:flex;flex-direction:column;gap:var(--space-16)}
+.who{display:flex;align-items:center;gap:var(--space-12);min-width:0}
+.who>div{display:flex;flex-direction:column;gap:var(--space-4);min-width:0}
+.review-head{display:flex;align-items:center;gap:var(--space-12)}
+.review-head .who{flex:1}
+.film-mini{display:flex;align-items:center;gap:var(--space-12);padding:var(--space-12) 0;border-top:1px solid var(--border-default);border-bottom:1px solid var(--border-default)}
+.cm-head{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--space-16);flex-wrap:wrap}
+.cm-film{padding:var(--space-8) var(--space-12);border:1px solid var(--border-default);border-radius:var(--radius-14)}
+.cm-card{margin-top:var(--space-48)}
+.film-mini img{flex:none;width:32px;height:48px;border-radius:var(--radius-4);object-fit:cover;border:1px solid var(--border-default)}
+.film-mini>div{display:flex;flex-direction:column}
+.review-title{font:600 20px/1.3 var(--f-ui)}
+.clip{position:relative;overflow:hidden;max-height:var(--ch,120px);transition:max-height .5s ease}
+.rcx:checked~.clip{max-height:2400px}
+.rcx:checked~.clip::after{opacity:0}
+.more{cursor:pointer;-webkit-user-select:none;user-select:none}
+.more .mt{display:grid;justify-items:start}
+.more .mt>span{grid-area:1/1;display:inline-flex;align-items:center;gap:inherit}
+.more .mt{gap:inherit}
+.more .m-close{visibility:hidden}
+.rcx:checked~.review-foot .more .m-open{visibility:hidden}
+.rcx:checked~.review-foot .more .m-close{visibility:visible}
+.rcx:checked~.review-foot .more svg{transform:rotate(180deg)}
+.more svg{transition:transform .25s}
+.rcx:focus-visible~.review-foot .more{outline:2px solid var(--focus-ring);outline-offset:2px}
+.clip p+p{margin-top:var(--space-12)}
+.clip .t-body{color:var(--text-secondary)}
+.clip::after{content:"";position:absolute;left:0;right:0;bottom:0;height:48px;background:linear-gradient(to bottom,rgba(21,24,32,0),var(--card-solid));pointer-events:none;transition:opacity .3s}
+
+.review-foot{display:flex;align-items:center;gap:var(--space-16);flex-wrap:wrap;margin-top:auto}
+.review>.review-foot{padding-top:var(--space-8)}
+.status{display:inline-flex;align-items:center;gap:6px;color:var(--status-azure);font:500 14px/1.4 var(--f-ui)}
+.status svg{width:16px;height:15px}
+.review-foot .more{flex:none;margin:0;padding:8px 0;gap:6px;font-size:15px}
+.review-foot .more:hover{background:none;color:var(--text-primary)}
+.review-foot .more .ic{width:18px;height:18px}
+.likes{display:inline-flex;align-items:center;gap:var(--space-4);height:20px;color:var(--text-muted);font:400 14px/20px var(--f-ui);font-variant-numeric:tabular-nums}
+.likes .ic{width:20px;height:20px}
+.sp{flex:1}
+
+/* ===== Score / Block, Part, Summary ===== */
+.scores{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-12)}
+.sblock{display:grid;grid-template-rows:1fr auto;justify-items:start;align-items:start;gap:var(--space-8);padding:var(--space-16);border:1px solid var(--k-border);border-radius:var(--radius-10);background:var(--k-bg)}
+.sblock .plate,.rbadge .tot{display:inline-flex;align-items:center;justify-content:center;height:34px;min-width:44px;padding:0 8px;border:1px solid var(--k-border);border-radius:var(--radius-8);background:var(--k-plate);color:var(--k);font:600 16px/1 var(--f-ui);letter-spacing:0;font-variant-numeric:tabular-nums}
+.parts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-12) 22px}
+.part{display:flex;align-items:center;justify-content:space-between;gap:var(--space-8);min-height:24px}
+.summary,.studio{container-type:inline-size}
+.parts{grid-auto-rows:24px;row-gap:var(--space-12)}
+.part .t-caption{color:var(--text-muted);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@container (max-width:460px){.parts{grid-template-columns:1fr}}
+.part .plate{min-width:3ch;height:auto;padding:0;background:none;justify-content:flex-end;font:600 16px/1.5 var(--f-ui);color:var(--text-primary);font-variant-numeric:tabular-nums}
+.part .plate.plate-author{background:none;color:var(--role-author)}
+.summary{display:flex;flex-direction:column;gap:var(--space-16)}
+.summary .t-label,.summary .t-caption,.summary .part .t-caption,.summary>p{color:var(--text-primary)}
+
+/* ===== Rating / Form + Slider ===== */
+.form{display:flex;flex-direction:column;gap:var(--space-16)}
+.sliders{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-24) 22px}
+.slider{display:flex;flex-direction:column;gap:var(--space-12)}
+.slider-head{display:flex;align-items:center;gap:6px;height:24px}
+.slider-title{flex:1;min-width:0;color:var(--text-secondary);font:500 16px/24px var(--f-ui);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.help{position:relative;flex:none;display:grid;place-items:center;width:20px;height:20px;color:var(--text-muted)}
+.help .ic{width:18px;height:18px}
+.tip{position:absolute;right:-8px;bottom:calc(100% + 8px);z-index:20;width:240px;padding:12px 16px;border:1px solid var(--border-default);border-radius:var(--radius-14);background:var(--surface-popover);text-align:left;opacity:0;pointer-events:none;transform:translateY(4px);transition:opacity .15s,transform .15s}
+.tip b{display:block;font:600 16px/1.5 var(--f-ui);color:var(--text-primary)}
+.tip span{display:block;margin-top:4px;font:400 14px/1.4 var(--f-ui);color:var(--text-muted)}
+.help:hover .tip,.help:focus .tip,.help.on .tip{opacity:1;transform:none}
+input[type=range]{--fill:var(--score-ratings);--f:50%;-webkit-appearance:none;appearance:none;width:100%;height:20px;margin:0;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:linear-gradient(to right,var(--fill) var(--f),var(--border-strong) var(--f))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;margin-top:-8px;border:0;border-radius:50%;background:var(--text-primary)}
+input[type=range]::-moz-range-track{height:4px;border-radius:2px;background:var(--border-strong)}
+input[type=range]::-moz-range-progress{height:4px;border-radius:2px;background:var(--fill)}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border:0;border-radius:50%;background:var(--text-primary)}
+input[type=range].imp{--fill:var(--role-author)}
+input[type=range]:disabled{cursor:default}
+.result{display:flex;align-items:center;justify-content:space-between;gap:var(--space-12);padding-top:var(--space-16);border-top:1px solid var(--border-default)}
+
+
+/* ===== Score / Badge — блок оценки в рецензии: итог и 5 параметров под ним ===== */
+.rbadge{display:grid;gap:var(--space-8);justify-items:start;padding:var(--space-12);border:1px solid var(--k-border);border-radius:var(--radius-10);background:var(--k-bg)}
+
+.rbadge .ps{display:grid;grid-template-columns:repeat(5,24px);gap:4px}
+.rbadge .ps i{position:relative;display:grid;place-items:center;width:24px;height:24px;border-radius:var(--radius-4);background:var(--surface-chip);color:var(--text-primary);font:500 13px/1 var(--f-ui);font-style:normal;font-variant-numeric:tabular-nums;cursor:default}
+.rbadge .ps i.imp{background:var(--role-author-tag-bg);color:var(--role-author)}
+.pop{position:absolute;z-index:30;left:50%;bottom:calc(100% + 8px);padding:8px 12px;border:1px solid var(--border-default);border-radius:var(--radius-10);background:var(--surface-popover);color:var(--text-primary);font:400 14px/1.4 var(--f-ui);white-space:nowrap;opacity:0;pointer-events:none;transform:translate(-50%,4px);transition:opacity .15s,transform .15s}
+.rbadge .ps i:nth-child(n+4) .pop{left:auto;right:0;transform:translateY(4px)}
+.rbadge .ps i:nth-child(n+4):hover .pop,.rbadge .ps i:nth-child(n+4):focus .pop{transform:none}
+.rbadge .ps i:hover .pop,.rbadge .ps i:focus .pop{opacity:1;transform:translate(-50%,0)}
+.review-head{align-items:flex-start}
+/* Лайк автора: всплывающее окно с автором */
+.al{position:relative;display:inline-flex}
+.al .tag{cursor:default}
+.al-pop{position:absolute;z-index:30;right:0;bottom:calc(100% + 8px);display:flex;align-items:center;gap:var(--space-12);padding:var(--space-12) var(--space-16);border:1px solid var(--border-default);border-radius:var(--radius-14);background:var(--surface-popover);white-space:nowrap;opacity:0;pointer-events:none;transform:translateY(4px);transition:opacity .15s,transform .15s}
+.al-pop>div{display:flex;flex-direction:column}
+.al:hover .al-pop,.al:focus-within .al-pop,.al.on .al-pop{opacity:1;transform:none}
+
+/* ===== Рамка авторских блоков обрисовывается при появлении ===== */
+@property --p{syntax:'<percentage>';inherits:false;initial-value:100%}
+.card-author{position:relative;border-color:rgba(255,173,97,.12)}
+.card-author::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:conic-gradient(from -90deg,var(--role-author-block-border) var(--p),transparent 0);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;transition:--p 1.6s cubic-bezier(.4,0,.2,1) .15s}
+.js .card-author.rv:not(.in)::before{--p:0%}
+
+/* ===== Форма: качество гаснет до неактивного, итог меняется с анимацией ===== */
+@property --fill{syntax:'<color>';inherits:true;initial-value:#b3a7e0}
+.sliders .slider{transition:opacity .9s ease}
+.sliders input[type=range]{transition:--fill .9s ease,opacity .9s ease}
+.sliders .plate{transition:background-color .9s ease,color .9s ease,opacity .9s ease}
+.sliders .slider-title,.sliders .help{transition:color .9s ease,opacity .9s ease}
+
+html:not(.js) #lab .sliders input[type=range],#lab.dim .sliders input[type=range]{--fill:var(--text-faint)}
+html:not(.js) #lab .sliders .plate,#lab.dim .sliders .plate{background:var(--surface-chip);color:var(--text-muted)}
+html:not(.js) #lab .sliders .slider-title,#lab.dim .sliders .slider-title{color:var(--text-muted)}
+html:not(.js) #lab .sliders input,html:not(.js) #lab .sliders .plate,html:not(.js) #lab .sliders .slider-title,#lab.dim .sliders input,#lab.dim .sliders .plate,#lab.dim .sliders .slider-title{opacity:.65}
+html:not(.js) #lab .sliders input[type=range]::-webkit-slider-thumb,#lab.dim .sliders input[type=range]::-webkit-slider-thumb{background:var(--text-muted)}
+#lab .group-note{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-8)}
+#lab .group-note .tag{white-space:normal}
+#lab .group-note .tag{opacity:0;transition:opacity .6s ease .6s}
+#lab.dim .group-note .tag{opacity:1}
+#total{transition:transform .25s ease}
+#total.bump{transform:scale(1.12)}
+
+
+/* ===== Печать текста без скачка высоты ===== */
+.typed{position:relative}
+.js .typed .ghost{visibility:hidden}
+.typed .live{display:none}
+.js .typed .live{display:block;position:absolute;inset:0}
+.js .typed .live::after{content:"";display:inline-block;width:2px;height:1.1em;margin-left:2px;vertical-align:-2px;background:var(--role-author);animation:blink 1s steps(1) infinite}
+.typed.done .live::after{display:none}
+@keyframes blink{50%{opacity:0}}
+
+/* ===== Почта: hover ===== */
+.input.mail{transition:border-color .2s,background-color .2s}
+.input.mail span{background:linear-gradient(var(--role-author),var(--role-author)) left bottom/0 1px no-repeat;transition:background-size .3s ease;flex:0 1 auto}
+.input.mail:hover,.input.mail:focus-visible{border-color:var(--role-author-tag-border);background:var(--role-author-tag-bg)}
+.input.mail:hover span,.input.mail:focus-visible span{background-size:100% 1px}
+.input.mail:hover .ic{color:var(--role-author)}
+.input.mail .ic{margin-left:auto;transition:color .2s}
+
+/* ===== FAQ: весь блок кликабелен, текст не выделяется ===== */
+.faq-item{cursor:pointer;-webkit-user-select:none;user-select:none}
+.faq-item:hover{border-color:var(--border-strong)}
+
+/* ===== Info cards (Benefits) ===== */
+.benefits{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-12)}
+.info{display:flex;flex-direction:column;gap:var(--space-12)}
+.info .ic-tile{width:40px;height:40px;border-radius:var(--radius-10);display:grid;place-items:center;background:var(--score-ratings-plate);color:var(--accent-brand);margin-bottom:var(--space-4)}
+.info .step{font:600 27px/1.1 var(--f-ui);color:var(--accent-brand);font-variant-numeric:tabular-nums}
+
+/* ===== Author profile / Film row / Studio ===== */
+.profile{display:flex;flex-direction:column;gap:var(--space-24)}
+.profile .who{gap:var(--space-16)}
+.films{display:flex;flex-direction:column;gap:var(--space-12)}
+.film{display:flex;align-items:center;gap:var(--space-16);padding:var(--space-12);border:1px solid var(--border-default);border-radius:var(--radius-14)}
+.film img{flex:none;width:48px;height:72px;border-radius:var(--radius-8);object-fit:cover;border:1px solid var(--border-default);background:var(--bg-raised)}
+.film .meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--space-4)}
+.credit{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.film .chips{display:grid;grid-template-columns:repeat(3,44px);gap:var(--space-8)}
+.dash{color:var(--text-faint)!important;background:var(--surface-chip)!important;border-color:var(--border-default)!important}
+.studio{display:flex;flex-direction:column;gap:var(--space-24)}
+.profile .films{margin-top:auto}
+.studio>.result{padding-top:0;border-top:0}
+.studio-head{display:flex;align-items:center;gap:var(--space-8)}
+.studio-head h3{flex:1}
+.stats,.prof-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:var(--space-24);row-gap:var(--space-4)}
+.stats .stat,.prof-stats .stat{display:grid;grid-template-rows:subgrid;grid-row:span 3;gap:var(--space-4);align-items:end}
+.prof-stats .stat{grid-row:span 2}
+.stat .t-caption:first-child{align-self:end}
+.stat{display:flex;flex-direction:column;gap:var(--space-4)}
+.stat .t-caption:first-child{color:var(--text-muted)}
+.stat .delta{color:var(--status-success);align-self:start}
+.stats .stat>.t-caption:first-child{white-space:nowrap}
+.last{display:flex;flex-direction:column;gap:var(--space-12);margin-top:auto;padding:var(--space-16);border:1px solid var(--border-default);border-radius:var(--radius-14)}
+.last-head{display:flex;align-items:flex-start;gap:var(--space-12)}
+.last-head .who{flex:1}
+.last-text{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.last-foot{display:flex;align-items:center;gap:var(--space-12)}
+.pill{display:inline-flex;align-items:center;gap:var(--space-8);height:38px;padding:0 12px;border:1px solid var(--border-strong);border-radius:var(--radius-full);color:var(--text-secondary);font:400 14px/1.4 var(--f-ui);transition:background-color .2s,border-color .2s,color .2s}
+.pill .ic{width:16px;height:16px}
+.pill:hover{background:var(--surface-chip)}
+.pill{cursor:pointer;-webkit-user-select:none;user-select:none}
+.pill:has(input:checked){border-color:var(--role-author-tag-border);background:var(--role-author-tag-bg);color:var(--role-author)}
+.pill:has(input:checked) .ic{fill:currentColor}
+.pill:has(input:focus-visible){outline:2px solid var(--focus-ring);outline-offset:2px}
+.p-on{display:none}
+.sm{display:none}
+@media (max-width:760px){.lg{display:none}.sm{display:inline}}
+.pill:has(input:checked) .p-on{display:inline}.pill:has(input:checked) .p-off{display:none}
+.last:has(.pill input:checked) .c-on{display:inline}.last:has(.pill input:checked) .c-off{display:none}
+
+
+/* ===== Notification / Points ===== */
+.notice{display:flex;align-items:stretch;gap:var(--space-16);padding:var(--space-20);border:1px solid var(--border-default);border-radius:var(--radius-14);background:var(--surface-popover)}
+.notice-body{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:var(--space-12)}
+.notice img{flex:none;align-self:center;width:64px;height:96px;object-fit:cover;border-radius:var(--radius-8);border:1px solid var(--border-default)}
+.notice-head svg{flex:none;width:32px;height:29px}
+.notice-pts{display:flex;align-items:center;gap:var(--space-8);flex-wrap:wrap}
+.points{display:flex;flex-direction:column;gap:var(--space-12)}
+.row{display:flex;justify-content:space-between;gap:var(--space-8)}
+.row span{color:var(--text-secondary)}
+.row b{font:600 16px/1.5 var(--f-ui);font-variant-numeric:tabular-nums}
+.like-copy{display:flex;flex-direction:column;gap:var(--space-16)}
+.like-copy .t-body{color:var(--text-secondary);font-size:18px;line-height:1.55}
+
+/* ===== Application ===== */
+.apply{display:flex;flex-direction:column;gap:var(--space-24);padding:var(--space-48)}
+.apply-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--space-24);align-items:start}
+.apply ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:var(--space-8)}
+.apply li{display:flex;gap:var(--space-12);color:var(--text-secondary)}
+.apply li::before{content:"";flex:none;width:6px;height:6px;margin-top:9px;border-radius:50%;background:var(--role-author)}
+.field{display:flex;flex-direction:column;gap:var(--space-8)}
+.field .label{color:var(--text-secondary);font:500 16px/1.4 var(--f-ui)}
+.input{display:flex;align-items:center;gap:var(--space-8);padding:12px 16px;border:1px solid var(--border-strong);border-radius:var(--radius-14);font:400 16px/1.5 var(--f-ui);color:var(--text-primary);text-align:left;width:100%;transition:border-color .15s}
+.input:hover{border-color:rgba(232,233,239,.28)}
+.input span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.input .ic{color:var(--text-muted)}
+.field .helper{color:var(--text-faint);font:400 14px/1.4 var(--f-ui);min-height:20px}
+.field .helper.ok{color:var(--status-success)}
+
+/* ===== FAQ ===== */
+.faq{display:flex;flex-direction:column;gap:var(--space-12);max-width:960px}
+.faq-item{border:1px solid var(--border-default);border-radius:var(--radius-14);transition:border-color .2s}
+.faq-item.open{border-color:var(--border-strong)}
+.faq-q{display:flex;align-items:center;gap:var(--space-16);width:100%;padding:20px 24px;text-align:left;font:600 16px/1.5 var(--f-ui)}
+.faq-q span{flex:1}
+.faq-q .ic{width:24px;height:24px;color:var(--text-muted);transition:transform .25s}
+.faq-item.open .faq-q .ic{transform:rotate(45deg)}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
+.faq-item.open .faq-a{grid-template-rows:1fr}
+.faq-a>div{overflow:hidden}
+.faq-a p{padding:0 24px 20px;color:var(--text-muted)}
+
+/* ===== Final CTA / Footer ===== */
+.final{position:relative;overflow:hidden;overflow:clip}
+.final .wrap{position:relative;display:flex;flex-direction:column;align-items:center;gap:var(--space-48);text-align:center}
+.final .bgword{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:600 420px/1 var(--f-ed);letter-spacing:-.04em;color:var(--text-primary);opacity:.04;pointer-events:none;user-select:none;white-space:nowrap}
+.final h2{position:relative}
+.final .contact{position:relative;color:var(--text-muted);font:400 16px/1.5 var(--f-ui)}
+.final .contact a{color:var(--action-link);text-decoration:underline;text-underline-offset:4px;text-decoration-color:rgba(179,167,224,.4)}
+.foot{border-top:1px solid var(--border-default)}
+.foot .wrap{display:flex;align-items:center;justify-content:space-between;gap:var(--space-24);flex-wrap:wrap;padding-top:var(--space-48);padding-bottom:var(--space-48)}
+.foot .meta{display:flex;flex-direction:column;align-items:flex-end;gap:var(--space-4);text-align:right}
+
+/* ===== Toast ===== */
+.toast{position:fixed;left:50%;bottom:24px;z-index:200;display:flex;align-items:center;gap:var(--space-8);padding:12px 16px;border:1px solid rgba(159,211,176,.45);border-radius:var(--radius-14);background:var(--surface-popover);color:var(--text-primary);font:400 14px/1.4 var(--f-ui);opacity:0;pointer-events:none;transform:translate(-50%,8px);transition:opacity .2s,transform .2s}
+.toast .ic{color:var(--status-success)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ===== Появление (только transform/opacity) ===== */
+.js .rv{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.js .rv.in{opacity:1;transform:none}
+.js .rv .stg>*{opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease;transition-delay:calc(var(--i,0)*70ms)}
+.js .rv.in .stg>*{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .card-author::before,.sliders .slider,.sliders input[type=range],.sliders .plate,#total{transition:none}
+  .fly{animation:none}
+  .js .rv,.js .rv .stg>*{opacity:1;transform:none;transition:none}
+  .clip,.faq-a,.toast{transition:none}
+}
+
+/* ===== Tablet 761–1023 ===== */
+@media (max-width:1023px){
+  :root{--page-pad:var(--space-40);--sec-pad:var(--space-96)}
+  .t-display{font-size:80px}
+  .t-h2{font-size:44px}
+  .cols,.apply-grid{grid-template-columns:1fr}
+  .benefits{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fly{right:4%;width:200px}
+  .hero .t-lead{max-width:62%}
+}
+/* ===== Phone ≤ 760 ===== */
+@media (max-width:760px){
+  :root{--page-pad:var(--space-20);--sec-pad:var(--space-64)}
+  html{scroll-padding-top:80px}
+  .head .wrap{padding-top:var(--space-12);padding-bottom:var(--space-12)}
+  .logo-tile{width:36px;height:36px}.logo-tile svg{width:26px;height:26px}
+  .logo b{font-size:20px}
+  .head .btn{padding:8px 12px;font-size:14px}
+  .hero .wrap{gap:var(--space-32);padding-top:var(--space-32);padding-bottom:var(--space-48)}
+  .t-display{font-size:44px;line-height:1.04}
+  .t-h2{font-size:32px;line-height:1.12}
+  .t-lead{font-size:18px}
+  .sh .t-lead{display:none}
+  .hero .t-lead{max-width:none}
+  .review-head{flex-wrap:wrap}
+  .review-head .who{flex:1 1 100%}
+  .rbadge{grid-auto-flow:column;align-items:center;gap:var(--space-12);justify-content:start}
+  .review-foot{gap:var(--space-8);flex-wrap:nowrap}
+  .review-foot .more{padding:8px 0;font-size:13px;gap:4px}
+  .review-foot .more .ic{width:16px;height:16px}
+  .cm-film{flex:1 1 100%}
+  .sh{margin-bottom:var(--space-32)}
+  .hero-act{align-self:stretch}
+  .glass{display:flex;flex-direction:column;padding:var(--space-16)}
+  .glass .btn{width:100%}
+  .hero-act{margin-top:96px}.fly{width:132px;right:12px;bottom:calc(100% - 18px)}
+  .card{padding:var(--space-20)}
+  .apply{padding:var(--space-20)}
+  .benefits{grid-template-columns:1fr;gap:var(--space-12)}
+  .benefits+.card{margin-top:var(--space-32)!important}
+  .info .ic-tile{margin-bottom:0}
+  .scores{gap:var(--space-8)}
+  .sblock{padding:var(--space-12)}
+  .sblock .t-caption{font-size:13px}
+  .sblock .plate{font-size:22px}
+  .parts,.sliders{grid-template-columns:1fr}
+  .film{flex-wrap:wrap}
+  .film .chips{width:100%;padding-left:64px}
+  .stats,.prof-stats{column-gap:var(--space-12);row-gap:var(--space-4)}
+  .stats .stat>.t-caption:first-child{font-size:13px}
+  .stats .delta{font-size:12px}
+  .pill{white-space:nowrap;padding:0 10px}
+  .final .bgword{font-size:min(200px,52vw)}
+  .foot .wrap{flex-direction:column;align-items:flex-start}
+  .foot .meta{align-items:flex-start;text-align:left}
+  .cap{display:none}
+}
+@media (max-width:380px){.t-display{font-size:38px}}
+@media (max-width:379px){.stats{column-gap:8px!important}.stats .stat>.t-caption:first-child{font-size:12px!important}.pill{white-space:normal!important;height:auto;min-height:38px}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-heart" viewBox="0 1 24 24"><path d="M12 19.5C12 19.5 5 15.2 5 10.2C5.08 9.42 5.39 8.69 5.88 8.09C6.38 7.48 7.03 7.04 7.78 6.8C8.52 6.57 9.32 6.56 10.07 6.77C10.82 6.98 11.49 7.41 12 8C12.51 7.41 13.18 6.98 13.93 6.77C14.68 6.56 15.48 6.57 16.22 6.8C16.97 7.04 17.62 7.48 18.12 8.09C18.61 8.69 18.92 9.42 19 10.2C19 15.2 12 19.5 12 19.5Z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12H19M13 18L19 12L13 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9L12 15L18 9"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5V19M5 12H19"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><path d="M20 12C20 16.42 16.42 20 12 20C7.58 20 4 16.42 4 12C4 7.58 7.58 4 12 4C16.42 4 20 7.58 20 12Z"/><path d="M9.8 9.6C10.01 9.12 10.38 8.73 10.85 8.49C11.31 8.25 11.85 8.18 12.36 8.28C12.87 8.39 13.34 8.67 13.67 9.07C14 9.47 14.19 9.98 14.2 10.5C14.2 12.1 12 12.5 12 13.8M12 16.8V16.9"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><path d="M20 12C20 16.42 16.42 20 12 20C7.58 20 4 16.42 4 12C4 7.58 7.58 4 12 4C16.42 4 20 7.58 20 12Z"/><path d="M12 11V16.5M12 7.8V8"/></symbol>
+  <symbol id="i-fly-s" viewBox="0 0 240 220"><ellipse cx="64" cy="122" rx="60" ry="50" transform="rotate(25 64 122)" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-opacity=".55" stroke-width="10"/><ellipse cx="184" cy="92" rx="59" ry="50" transform="rotate(-45 184 92)" fill="currentColor" fill-opacity=".28" stroke="currentColor" stroke-opacity=".55" stroke-width="10"/><rect x="81.56" y="81.52" width="65" height="124" rx="32.5" transform="rotate(-15 81.56 81.52)" fill="currentColor"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 4.5L14.3 9.3L19.5 10L15.7 13.6L16.6 18.8L12 16.3L7.4 18.8L8.3 13.6L4.5 10L9.7 9.3L12 4.5Z"/></symbol>
+  <symbol id="i-film" viewBox="0 0 24 24"><path d="M6.5 4.5H17.5C18.6 4.5 19.5 5.4 19.5 6.5V17.5C19.5 18.6 18.6 19.5 17.5 19.5H6.5C5.4 19.5 4.5 18.6 4.5 17.5V6.5C4.5 5.4 5.4 4.5 6.5 4.5Z"/><path d="M8.5 4.5V19.5M15.5 4.5V19.5M4.5 9H8.5M4.5 15H8.5M15.5 9H19.5M15.5 15H19.5"/></symbol>
+  <symbol id="i-comment" viewBox="0 0 24 24"><path d="M5 6.5C5 5.67 5.67 5 6.5 5H17.5C18.33 5 19 5.67 19 6.5V14.5C19 15.33 18.33 16 17.5 16H10L6 19.5V16H6.5C5.67 16 5 15.33 5 14.5V6.5Z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M15.5 8.5C15.5 10.43 13.93 12 12 12C10.07 12 8.5 10.43 8.5 8.5C8.5 6.57 10.07 5 12 5C13.93 5 15.5 6.57 15.5 8.5Z"/><path d="M5 19.5C6.2 16.3 8.8 14.7 12 14.7C15.2 14.7 17.8 16.3 19 19.5"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><path d="M10.5 8.5H16.5C17.6 8.5 18.5 9.4 18.5 10.5V16.5C18.5 17.6 17.6 18.5 16.5 18.5H10.5C9.4 18.5 8.5 17.6 8.5 16.5V10.5C8.5 9.4 9.4 8.5 10.5 8.5Z"/><path d="M15.5 8.5V6.5C15.5 5.95 15.05 5.5 14.5 5.5H6.5C5.95 5.5 5.5 5.95 5.5 6.5V14.5C5.5 15.05 5.95 15.5 6.5 15.5H8.5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5L9.5 17L19 7.5"/></symbol>
+  <symbol id="i-mark" viewBox="0 0 56 56"><ellipse cx="21" cy="26" rx="7" ry="10" transform="rotate(-28 21 26)" fill="none" stroke="#0e1016" stroke-width="2.5"/><ellipse cx="35" cy="26" rx="7" ry="10" transform="rotate(28 35 26)" fill="none" stroke="#0e1016" stroke-width="2.5"/><rect x="24.5" y="17" width="7" height="24" rx="3.5" fill="#0e1016"/></symbol>
+  <symbol id="i-fly" viewBox="0 0 240 220"><ellipse cx="64" cy="122" rx="60" ry="50" transform="rotate(25 64 122)" fill="rgba(156,203,212,.22)" stroke="rgba(156,203,212,.36)" stroke-width="1.5"/><ellipse cx="184" cy="92" rx="59" ry="50" transform="rotate(-45 184 92)" fill="rgba(156,203,212,.22)" stroke="rgba(156,203,212,.36)" stroke-width="1.5"/><rect x="81.56" y="81.52" width="65" height="124" rx="32.5" transform="rotate(-15 81.56 81.52)" fill="#9ccbd4"/></symbol>
+</svg>
+
+<header class="head">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Эхо — в начало"><span class="logo-tile"><svg viewBox="8 8 40 40" aria-hidden="true"><ellipse cx="21" cy="26" rx="7" ry="10" transform="rotate(-28 21 26)" fill="none" stroke="#0e1016" stroke-width="2.5"/><ellipse cx="35" cy="26" rx="7" ry="10" transform="rotate(28 35 26)" fill="none" stroke="#0e1016" stroke-width="2.5"/><rect x="24.5" y="17" width="7" height="24" rx="3.5" fill="#0e1016"/></svg></span><b>Эхо</b></a>
+    <a class="btn btn-author btn-s" href="#apply">Стать автором</a>
+  </div>
+</header>
+
+<main id="top">
+<!-- Landing / Hero -->
+<section class="hero" aria-labelledby="h1">
+  <div class="wrap">
+    <div class="hero-copy">
+      <h1 id="h1" class="t-display">Кино продолжается <span>в том, как его понимают</span></h1>
+      <p class="t-lead"><span class="lg">Сообщество людей, которые смотрят кино внимательно. Здесь автор видит, как его работа отзывается в зрителях.</span><span class="sm">Здесь автор видит, как его фильм отзывается в зрителях.</span></p>
+    </div>
+    <div class="hero-act">
+      <svg class="fly" viewBox="0 0 240 220" aria-hidden="true"><use href="#i-fly"/></svg>
+      <div class="glass">
+        <a class="btn btn-author btn-l" href="#apply">Оставить заявку автора<svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-secondary btn-l" href="#feedback">Как устроено Эхо</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Landing / Interface Demo: рецензия + оценка -->
+<section class="sec" id="feedback" aria-labelledby="s1">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="t-eyebrow">Что получает автор</span>
+      <h2 id="s1" class="t-h2">Зрители объясняют, что увидели в&nbsp;вашем фильме</h2>
+      <p class="t-lead">Не «зашло» или «не зашло», а разбор: что сработало, что нет и почему. Такую обратную связь можно взять в следующую работу.</p>
+    </div>
+    <div class="cols">
+      <article class="card review rv" aria-label="Пример рецензии">
+        <div class="review-head">
+          <div class="who">
+            <span class="avatar"><img src="data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%22120%22%20height%3D%22120%22%20viewBox%3D%220%200%20120%20120%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20aria-hidden%3D%22true%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22av0bg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%233a2d66%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%237a5ad6%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22av0f%22%20cx%3D%22.45%22%20cy%3D%22.38%22%20r%3D%22.7%22%3E%3Cstop%20stop-color%3D%22%23f4b06b%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23c06a2c%22%2F%3E%3C%2FradialGradient%3E%3CradialGradient%20id%3D%22av0e%22%20cx%3D%22.5%22%20cy%3D%22.45%22%20r%3D%22.6%22%3E%3Cstop%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.55%22%2F%3E%3Cstop%20offset%3D%22.35%22%20stop-color%3D%22%237fcf6a%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231c2a12%22%20stop-opacity%3D%22.9%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22120%22%20height%3D%22120%22%20fill%3D%22url(%23av0bg)%22%2F%3E%3Cpath%20d%3D%22M10%20120%20Q14%2092%2060%2088%20Q106%2092%20110%20120Z%22%20fill%3D%22%23e8e3f5%22%2F%3E%3Cpath%20d%3D%22M10%2096%20V120%22%20stroke%3D%22%237a5ad6%22%20stroke-opacity%3D%22.35%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20d%3D%22M30%2096%20V120%22%20stroke%3D%22%237a5ad6%22%20stroke-opacity%3D%22.35%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20d%3D%22M50%2096%20V120%22%20stroke%3D%22%237a5ad6%22%20stroke-opacity%3D%22.35%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20d%3D%22M70%2096%20V120%22%20stroke%3D%22%237a5ad6%22%20stroke-opacity%3D%22.35%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20d%3D%22M90%2096%20V120%22%20stroke%3D%22%237a5ad6%22%20stroke-opacity%3D%22.35%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20d%3D%22M110%2096%20V120%22%20stroke%3D%22%237a5ad6%22%20stroke-opacity%3D%22.35%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20d%3D%22M14%20104%20H106%22%20stroke%3D%22%237a5ad6%22%20stroke-opacity%3D%22.3%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20d%3D%22M44%2088%20L60%20104%20L76%2088%20L68%2086%20L60%2096%20L52%2086Z%22%20fill%3D%22%23fff%22%2F%3E%3Ccircle%20cx%3D%2260%22%20cy%3D%22110%22%20r%3D%221.8%22%20fill%3D%22%236b6380%22%2F%3E%3Cpath%20d%3D%22M26%2056%20L28%2014%20L54%2036Z%22%20fill%3D%22url(%23av0f)%22%2F%3E%3Cpath%20d%3D%22M94%2056%20L92%2014%20L66%2036Z%22%20fill%3D%22url(%23av0f)%22%2F%3E%3Cpath%20d%3D%22M31%2046%20L32%2022%20L48%2036Z%22%20fill%3D%22%23ffb3b8%22%20opacity%3D%22.55%22%2F%3E%3Cpath%20d%3D%22M89%2046%20L88%2022%20L72%2036Z%22%20fill%3D%22%23ffb3b8%22%20opacity%3D%22.55%22%2F%3E%3Cellipse%20cx%3D%2260%22%20cy%3D%2260%22%20rx%3D%2238%22%20ry%3D%2233%22%20fill%3D%22url(%23av0f)%22%2F%3E%3Cpath%20d%3D%22M52%2030%20q8%208%200%2014%20M60%2028%20v15%20M68%2030%20q-8%208%200%2014%20M26%2058%20h10%20M24%2066%20h10%20M94%2058%20h-10%20M96%2066%20h-10%22%20stroke%3D%22%23a8561f%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20fill%3D%22none%22%20opacity%3D%22.75%22%2F%3E%3Cellipse%20cx%3D%2252%22%20cy%3D%2273%22%20rx%3D%2211%22%20ry%3D%228.5%22%20fill%3D%22%23fbe2c4%22%2F%3E%3Cellipse%20cx%3D%2268%22%20cy%3D%2273%22%20rx%3D%2211%22%20ry%3D%228.5%22%20fill%3D%22%23fbe2c4%22%2F%3E%3Cellipse%20cx%3D%2260%22%20cy%3D%2280%22%20rx%3D%228%22%20ry%3D%225%22%20fill%3D%22%23fbe2c4%22%2F%3E%3Cellipse%20cx%3D%2246%22%20cy%3D%2257%22%20rx%3D%227.5%22%20ry%3D%226.6%22%20fill%3D%22url(%23av0e)%22%2F%3E%3Cellipse%20cx%3D%2274%22%20cy%3D%2257%22%20rx%3D%227.5%22%20ry%3D%226.6%22%20fill%3D%22url(%23av0e)%22%2F%3E%3Cellipse%20cx%3D%2246%22%20cy%3D%2257%22%20rx%3D%221.8%22%20ry%3D%225.4%22%20fill%3D%22%230b0b0b%22%2F%3E%3Cellipse%20cx%3D%2274%22%20cy%3D%2257%22%20rx%3D%221.8%22%20ry%3D%225.4%22%20fill%3D%22%230b0b0b%22%2F%3E%3Ccircle%20cx%3D%2248.5%22%20cy%3D%2254%22%20r%3D%221.7%22%20fill%3D%22%23fff%22%2F%3E%3Ccircle%20cx%3D%2276.5%22%20cy%3D%2254%22%20r%3D%221.7%22%20fill%3D%22%23fff%22%2F%3E%3Cpath%20d%3D%22M38.5%2055%20Q46%2049%2053.5%2055%20M66.5%2055%20Q74%2049%2081.5%2055%22%20stroke%3D%22%23000%22%20stroke-opacity%3D%22.35%22%20stroke-width%3D%221.4%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M56%2068%20Q60%2066%2064%2068%20L60%2072.5Z%22%20fill%3D%22%23e58c9a%22%2F%3E%3Cpath%20d%3D%22M60%2072.5%20v3%20M60%2075.5%20q-4%204%20-8%201%20M60%2075.5%20q4%204%208%201%22%20stroke%3D%22%233a2a2a%22%20stroke-opacity%3D%22.6%22%20stroke-width%3D%221.3%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%3Cg%20stroke%3D%22%23fff%22%20stroke-opacity%3D%22.75%22%20stroke-width%3D%22.9%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M44%2074%20L16%2070%20M44%2077%20L17%2079%20M76%2074%20L104%2070%20M76%2077%20L103%2079%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E" alt=""></span>
+            <div><span class="t-strong">lena.frames</span><span class="status"><svg aria-hidden="true"><use href="#i-fly-s"/></svg>Лазурь</span><span class="t-caption faint">12.10.26</span></div>
+          </div>
+          <div class="rbadge k-reviews" aria-label="Оценка рецензента: 77"><span class="tot">77</span><span class="ps"><i tabindex="0">8<span class="pop">Драматургия и структура</span></i><i tabindex="0">9<span class="pop">Персонажи и исполнение</span></i><i tabindex="0">9<span class="pop">Визуальный язык</span></i><i tabindex="0">7<span class="pop">Звук и музыка</span></i><i class="imp" tabindex="0">9<span class="pop">Впечатление</span></i></span></div>
+        </div>
+        <div class="film-mini">
+          <img src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20300%20450%22%20preserveAspectRatio%3D%22xMidYMid%20slice%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22pp0b%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%230a1020%22%2F%3E%3Cstop%20offset%3D%22.6%22%20stop-color%3D%22%2316263b%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23060a14%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22pp0m%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23d9dee8%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%236c7588%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22pp0g%22%3E%3Cstop%20stop-color%3D%22%2358d9eb%22%20stop-opacity%3D%22.45%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2358d9eb%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22300%22%20height%3D%22450%22%20fill%3D%22url(%23pp0b)%22%2F%3E%3Ccircle%20cx%3D%22150%22%20cy%3D%22150%22%20r%3D%22150%22%20fill%3D%22url(%23pp0g)%22%2F%3E%3Cpath%20d%3D%22M86%20250%20L-210%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M102%20250%20L-120%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M118%20250%20L-30%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M134%20250%20L60%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M150%20250%20L150%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M166%20250%20L240%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M182%20250%20L330%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M198%20250%20L420%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M214%20250%20L510%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M0%20258%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.08%22%2F%3E%3Cpath%20d%3D%22M0%20264%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.11%22%2F%3E%3Cpath%20d%3D%22M0%20282%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.14%22%2F%3E%3Cpath%20d%3D%22M0%20312%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.16999999999999998%22%2F%3E%3Cpath%20d%3D%22M0%20354%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.2%22%2F%3E%3Cpath%20d%3D%22M0%20408%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.22999999999999998%22%2F%3E%3Cellipse%20cx%3D%22150%22%20cy%3D%22268%22%20rx%3D%2286%22%20ry%3D%2250%22%20fill%3D%22%233b4354%22%2F%3E%3Cpath%20d%3D%22M75.9%20136.6%20L89.2%2062.5%20L132.8%2099.2Z%22%20fill%3D%22url(%23pp0m)%22%2F%3E%3Cpath%20d%3D%22M224.1%20136.6%20L210.8%2062.5%20L167.2%2099.2Z%22%20fill%3D%22url(%23pp0m)%22%2F%3E%3Cpath%20d%3D%22M87.6%20121%20L92.3%2080.4%20L117.2%20100.7Z%22%20fill%3D%22%239aa4b8%22%20opacity%3D%22.55%22%2F%3E%3Cpath%20d%3D%22M212.4%20121%20L207.7%2080.4%20L182.8%20100.7Z%22%20fill%3D%22%239aa4b8%22%20opacity%3D%22.55%22%2F%3E%3Cellipse%20cx%3D%22150%22%20cy%3D%22160%22%20rx%3D%2278%22%20ry%3D%2267.1%22%20fill%3D%22url(%23pp0m)%22%2F%3E%3Cpath%20d%3D%22M142.2%20174%20L157.8%20174%20L150%20183.4Z%22%20fill%3D%22%239aa4b8%22%2F%3E%3Cpath%20d%3D%22M150%20183.4%20q-9.4%2012.5%20-18.7%203.1%20M150%20183.4%20q9.4%2012.5%2018.7%203.1%22%20stroke%3D%22%23120d0a%22%20stroke-opacity%3D%22.5%22%20stroke-width%3D%222.7%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%3Cg%20stroke%3D%22%23fff%22%20stroke-opacity%3D%22.55%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M126.6%20181.8%20L60.3%20170.9%20M126.6%20188.1%20L62.6%20192.8%22%2F%3E%3Cpath%20d%3D%22M173.4%20181.8%20L239.7%20170.9%20M173.4%20188.1%20L237.4%20192.8%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M98%20112%20Q150%2096%20202%20112%22%20stroke%3D%22%232c3240%22%20stroke-width%3D%222%22%20fill%3D%22none%22%2F%3E%3Ccircle%20cx%3D%22108%22%20cy%3D%22196%22%20r%3D%223%22%20fill%3D%22%232c3240%22%2F%3E%3Ccircle%20cx%3D%22192%22%20cy%3D%22196%22%20r%3D%223%22%20fill%3D%22%232c3240%22%2F%3E%3Crect%20x%3D%2296%22%20y%3D%22134%22%20width%3D%22108%22%20height%3D%2226%22%20rx%3D%2213%22%20fill%3D%22%23071018%22%2F%3E%3Crect%20x%3D%22102%22%20y%3D%22140%22%20width%3D%2296%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%2358d9eb%22%2F%3E%3Crect%20x%3D%22102%22%20y%3D%22140%22%20width%3D%2296%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%23bff6ff%22%20opacity%3D%22.5%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%22330%22%20width%3D%22300%22%20height%3D%22120%22%20fill%3D%22%2305080f%22%20opacity%3D%22.55%22%2F%3E%3Ctext%20x%3D%22150%22%20y%3D%22382%22%20text-anchor%3D%22middle%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-weight%3D%22900%22%20font-size%3D%2236%22%20letter-spacing%3D%22-1%22%20fill%3D%22%23fff%22%20textLength%3D%22262%22%20lengthAdjust%3D%22spacingAndGlyphs%22%3E%D0%9A%D0%9E%D0%A2%D0%9E%D0%9C%D0%98%D0%9D%D0%90%D0%A2%D0%9E%D0%A0%3C%2Ftext%3E%3Ctext%20x%3D%22150%22%20y%3D%22420%22%20text-anchor%3D%22middle%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-weight%3D%22700%22%20font-size%3D%2211.5%22%20letter-spacing%3D%222.4%22%20fill%3D%22%2358d9eb%22%3E%D0%A1%D0%A3%D0%94%D0%9D%D0%AB%D0%99%20%D0%9A%D0%9E%D0%A0%D0%9C%3C%2Ftext%3E%3C%2Fsvg%3E" alt="">
+          <div><span class="t-strong">Котоминатор: Судный корм</span><span class="t-caption muted">2025 · <span class="author">Вера Ильина</span></span></div>
+        </div>
+        <h3 class="review-title">Железный кот, который учится быть котом</h3>
+        <input type="checkbox" class="sr rcx" id="rcx">
+        <div class="clip" id="rc">
+          <p class="t-body">Первые полчаса — классический фантастический боевик: погоня, перестрелки, холодный синий свет. Но потом фильм неожиданно меняет жанр. Робот застревает в квартире старушки и впервые слышит, как мурлычет настоящий кот.</p>
+          <p class="t-body">Сцена, где он пытается повторить этот звук сервоприводами, одновременно смешная и грустная, и ради неё фильм стоит смотреть. Режиссёр не торопится: камера долго держит крупный план, и мы успеваем заметить, как робот впервые сомневается в собственной программе.</p>
+          <p class="t-body">Визуальный язык — 9. Металлический свет постепенно теплеет вместе с героем, и к финалу квартира выглядит почти как старая открытка. Цвет здесь работает как сюжет: каждый новый оттенок означает маленький шаг к человечности.</p>
+          <p class="t-body">Персонажи — 9. Старушка не превращается в милый фон, у неё своя история и своё упрямство. Их диалоги без слов, только взглядами и звуками, — лучшее, что есть в фильме.</p>
+          <p class="t-body">Звук и музыка — 7. Музыка местами подсказывает эмоции, которые изображение и так передаёт. В сцене прощания тишина сработала бы сильнее. Драматургия — 8: вторая половина чуть затянута, но финал всё собирает и оставляет тёплое послевкусие.</p>
+        </div>
+        <div class="review-foot">
+          <label class="btn btn-ghost btn-s more" for="rcx"><span class="mt"><span class="m-open">Читать полностью<svg class="ic"><use href="#i-down"/></svg></span><span class="m-close" aria-hidden="true">Свернуть<svg class="ic"><use href="#i-down"/></svg></span></span></label>
+          <span class="sp"></span>
+          <span class="likes"><svg class="ic"><use href="#i-heart"/></svg>58</span>
+          <span class="al" tabindex="0"><span class="tag tag-author">Лайк автора</span><span class="al-pop" role="tooltip"><span class="avatar is-author"><img src="data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%22120%22%20height%3D%22120%22%20viewBox%3D%220%200%20120%20120%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20aria-hidden%3D%22true%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22av1bg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%234a2c14%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%239a5a26%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22av1f%22%20cx%3D%22.45%22%20cy%3D%22.38%22%20r%3D%22.7%22%3E%3Cstop%20stop-color%3D%22%23f3e7d3%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23c9b18f%22%2F%3E%3C%2FradialGradient%3E%3CradialGradient%20id%3D%22av1e%22%20cx%3D%22.5%22%20cy%3D%22.45%22%20r%3D%22.6%22%3E%3Cstop%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.55%22%2F%3E%3Cstop%20offset%3D%22.35%22%20stop-color%3D%22%235aa9ff%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231c2a12%22%20stop-opacity%3D%22.9%22%2F%3E%3C%2FradialGradient%3E%3CradialGradient%20id%3D%22av1p%22%20cx%3D%22.5%22%20cy%3D%22.62%22%20r%3D%22.42%22%3E%3Cstop%20stop-color%3D%22%235b3d2b%22%20stop-opacity%3D%22.95%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%235b3d2b%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22120%22%20height%3D%22120%22%20fill%3D%22url(%23av1bg)%22%2F%3E%3Cpath%20d%3D%22M8%20120%20Q14%2092%2060%2090%20Q106%2092%20112%20120Z%22%20fill%3D%22%23121212%22%2F%3E%3Crect%20x%3D%2240%22%20y%3D%2282%22%20width%3D%2240%22%20height%3D%2216%22%20rx%3D%227%22%20fill%3D%22%231e1e1e%22%2F%3E%3Cpath%20d%3D%22M26%2056%20L28%2014%20L54%2036Z%22%20fill%3D%22url(%23av1f)%22%2F%3E%3Cpath%20d%3D%22M94%2056%20L92%2014%20L66%2036Z%22%20fill%3D%22url(%23av1f)%22%2F%3E%3Cpath%20d%3D%22M31%2046%20L32%2022%20L48%2036Z%22%20fill%3D%22%23ffb3b8%22%20opacity%3D%22.55%22%2F%3E%3Cpath%20d%3D%22M89%2046%20L88%2022%20L72%2036Z%22%20fill%3D%22%23ffb3b8%22%20opacity%3D%22.55%22%2F%3E%3Cpath%20d%3D%22M26%2056%20L28%2014%20L54%2036Z%20M94%2056%20L92%2014%20L66%2036Z%22%20fill%3D%22%235b3d2b%22%20opacity%3D%22.75%22%2F%3E%3Cellipse%20cx%3D%2260%22%20cy%3D%2260%22%20rx%3D%2238%22%20ry%3D%2233%22%20fill%3D%22url(%23av1f)%22%2F%3E%3Cellipse%20cx%3D%2260%22%20cy%3D%2268%22%20rx%3D%2226%22%20ry%3D%2222%22%20fill%3D%22url(%23av1p)%22%2F%3E%3Cellipse%20cx%3D%2252%22%20cy%3D%2273%22%20rx%3D%2211%22%20ry%3D%228.5%22%20fill%3D%22%23f8efe2%22%2F%3E%3Cellipse%20cx%3D%2268%22%20cy%3D%2273%22%20rx%3D%2211%22%20ry%3D%228.5%22%20fill%3D%22%23f8efe2%22%2F%3E%3Cellipse%20cx%3D%2260%22%20cy%3D%2280%22%20rx%3D%228%22%20ry%3D%225%22%20fill%3D%22%23f8efe2%22%2F%3E%3Cellipse%20cx%3D%2246%22%20cy%3D%2257%22%20rx%3D%227.5%22%20ry%3D%226.6%22%20fill%3D%22url(%23av1e)%22%2F%3E%3Cellipse%20cx%3D%2274%22%20cy%3D%2257%22%20rx%3D%227.5%22%20ry%3D%226.6%22%20fill%3D%22url(%23av1e)%22%2F%3E%3Cellipse%20cx%3D%2246%22%20cy%3D%2257%22%20rx%3D%221.8%22%20ry%3D%225.4%22%20fill%3D%22%230b0b0b%22%2F%3E%3Cellipse%20cx%3D%2274%22%20cy%3D%2257%22%20rx%3D%221.8%22%20ry%3D%225.4%22%20fill%3D%22%230b0b0b%22%2F%3E%3Ccircle%20cx%3D%2248.5%22%20cy%3D%2254%22%20r%3D%221.7%22%20fill%3D%22%23fff%22%2F%3E%3Ccircle%20cx%3D%2276.5%22%20cy%3D%2254%22%20r%3D%221.7%22%20fill%3D%22%23fff%22%2F%3E%3Cpath%20d%3D%22M38.5%2055%20Q46%2049%2053.5%2055%20M66.5%2055%20Q74%2049%2081.5%2055%22%20stroke%3D%22%23000%22%20stroke-opacity%3D%22.35%22%20stroke-width%3D%221.4%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M56%2068%20Q60%2066%2064%2068%20L60%2072.5Z%22%20fill%3D%22%23e58c9a%22%2F%3E%3Cpath%20d%3D%22M60%2072.5%20v3%20M60%2075.5%20q-4%204%20-8%201%20M60%2075.5%20q4%204%208%201%22%20stroke%3D%22%233a2a2a%22%20stroke-opacity%3D%22.6%22%20stroke-width%3D%221.3%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%3Cg%20stroke%3D%22%23fff%22%20stroke-opacity%3D%22.75%22%20stroke-width%3D%22.9%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M44%2074%20L16%2070%20M44%2077%20L17%2079%20M76%2074%20L104%2070%20M76%2077%20L103%2079%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M30%2030%20Q34%2012%2062%2012%20Q90%2014%2090%2030%20Q60%2038%2030%2030Z%22%20fill%3D%22%23b8323a%22%2F%3E%3Ccircle%20cx%3D%2262%22%20cy%3D%2211%22%20r%3D%223%22%20fill%3D%22%23b8323a%22%2F%3E%3C%2Fsvg%3E" alt=""></span><div><span class="t-strong">Вера Ильина</span><span class="t-caption author">Режиссёр</span></div></span></span>
+        </div>
+      </article>
+
+      <div class="card summary rv" aria-label="Оценка фильма">
+        <span class="t-label muted">Оценка фильма «Котоминатор: Судный корм»</span>
+        <div class="scores stg">
+          <div class="sblock k-reviews" style="--i:0"><span class="t-caption muted">По рецензиям</span><span class="plate num" data-count="79">79</span></div>
+          <div class="sblock k-ratings" style="--i:1"><span class="t-caption muted">Без рецензий</span><span class="plate num" data-count="75">75</span></div>
+          <div class="sblock k-critics" style="--i:2"><span class="t-caption muted">Медиа</span><span class="plate num" data-count="73">73</span></div>
+        </div>
+        <span class="t-label muted" style="margin-top:8px">Параметры по рецензиям</span>
+        <div class="parts">
+          <div class="part"><span class="t-caption">Драматургия и структура</span><span class="plate num">8,6</span></div>
+          <div class="part"><span class="t-caption">Персонажи и исполнение</span><span class="plate num">8,6</span></div>
+          <div class="part"><span class="t-caption">Визуальный язык</span><span class="plate num">9,1</span></div>
+          <div class="part"><span class="t-caption">Звук и музыка</span><span class="plate num">7,9</span></div>
+          <div class="part"><span class="t-caption">Впечатление</span><span class="plate plate-author num">8,8</span></div>
+        </div>
+        <p class="t-body secondary" style="margin-top:auto;padding-top:8px"><span class="lg">Оценки собираются по пяти параметрам, поэтому видны сильные и слабые стороны фильма, а не только среднее число.</span><span class="sm">Пять параметров показывают сильные и слабые стороны, а не только среднее.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Rating / Form: качество отдельно от впечатления -->
+<section class="sec" aria-labelledby="s2">
+  <div class="wrap">
+    <div class="cols mid">
+      <div class="sh rv" style="margin-bottom:0">
+        <span class="t-eyebrow">Чем это отличается от рейтинга</span>
+        <h2 id="s2" class="t-h2">Качество и впечатление считаются раздельно</h2>
+        <p class="t-lead">Фильм может быть сделан качественно и при этом лично не тронуть. Это два разных сигнала, и Эхо их не смешивает. Подвигайте «Впечатление».</p>
+      </div>
+      <div class="card form rv" id="lab">
+        <span class="t-label muted">Качество</span>
+        <div class="sliders">
+          <div class="slider"><div class="slider-head"><span class="slider-title">Драматургия</span><button class="help" type="button" aria-label="Драматургия и структура: подсказка"><svg class="ic"><use href="#i-info"/></svg><span class="tip" role="tooltip"><b>Драматургия и структура</b><span>Насколько хорошо фильм построен как история</span></span></button><span class="plate plate-ratings num">9</span></div><input type="range" min="1" max="10" value="9" style="--f:88.89%" disabled aria-label="Драматургия и структура: 9"></div>
+          <div class="slider"><div class="slider-head"><span class="slider-title">Персонажи</span><button class="help" type="button" aria-label="Персонажи и исполнение: подсказка"><svg class="ic"><use href="#i-info"/></svg><span class="tip" role="tooltip"><b>Персонажи и исполнение</b><span>Насколько убедительно созданы и исполнены персонажи</span></span></button><span class="plate plate-ratings num">9</span></div><input type="range" min="1" max="10" value="9" style="--f:88.89%" disabled aria-label="Персонажи и исполнение: 9"></div>
+          <div class="slider"><div class="slider-head"><span class="slider-title">Визуальный язык</span><button class="help" type="button" aria-label="Визуальный язык: подсказка"><svg class="ic"><use href="#i-info"/></svg><span class="tip" role="tooltip"><b>Визуальный язык</b><span>Насколько выразительны изображение, свет и монтаж</span></span></button><span class="plate plate-ratings num">10</span></div><input type="range" min="1" max="10" value="10" style="--f:100%" disabled aria-label="Визуальный язык: 10"></div>
+          <div class="slider"><div class="slider-head"><span class="slider-title">Звук и музыка</span><button class="help" type="button" aria-label="Звук и музыка: подсказка"><svg class="ic"><use href="#i-info"/></svg><span class="tip" role="tooltip"><b>Звук и музыка</b><span>Насколько звук и музыка работают на фильм</span></span></button><span class="plate plate-ratings num">9</span></div><input type="range" min="1" max="10" value="9" style="--f:88.89%" disabled aria-label="Звук и музыка: 9"></div>
+        </div>
+        <div class="slider" style="margin-top:8px"><div class="slider-head"><span class="slider-title">Впечатление</span><button class="help" type="button" aria-label="Впечатление: подсказка"><svg class="ic"><use href="#i-info"/></svg><span class="tip" role="tooltip"><b>Впечатление</b><span>Личный отклик на фильм. Работает как множитель к оценке качества.</span></span></button><span class="plate plate-author num" id="impV">9</span></div><input class="imp" id="imp" type="range" min="1" max="10" value="9" aria-label="Впечатление"><span class="t-caption muted">Множитель к качеству: <b class="author num" id="mult">×0,93</b></span></div>
+        <div class="result"><span class="t-body secondary">Итог: качество <span class="num">92,5</span> × впечатление</span><span class="score-chip k-ratings num" id="total">86</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Landing / Author Space -->
+<section class="sec" aria-labelledby="s3">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="t-eyebrow">Пространство автора</span>
+      <h2 id="s3" class="t-h2">Ваш профиль и кабинет на&nbsp;платформе</h2>
+      <p class="t-lead">Публичная страница, которую видят зрители, и Эхо Studio, где видно, как воспринимают ваши работы.</p>
+    </div>
+    <div class="cols">
+      <div class="card card-author profile rv">
+        <div class="who">
+          <span class="avatar avatar-l is-author"><img src="data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%22120%22%20height%3D%22120%22%20viewBox%3D%220%200%20120%20120%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20aria-hidden%3D%22true%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22av1bg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%234a2c14%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%239a5a26%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22av1f%22%20cx%3D%22.45%22%20cy%3D%22.38%22%20r%3D%22.7%22%3E%3Cstop%20stop-color%3D%22%23f3e7d3%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23c9b18f%22%2F%3E%3C%2FradialGradient%3E%3CradialGradient%20id%3D%22av1e%22%20cx%3D%22.5%22%20cy%3D%22.45%22%20r%3D%22.6%22%3E%3Cstop%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.55%22%2F%3E%3Cstop%20offset%3D%22.35%22%20stop-color%3D%22%235aa9ff%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231c2a12%22%20stop-opacity%3D%22.9%22%2F%3E%3C%2FradialGradient%3E%3CradialGradient%20id%3D%22av1p%22%20cx%3D%22.5%22%20cy%3D%22.62%22%20r%3D%22.42%22%3E%3Cstop%20stop-color%3D%22%235b3d2b%22%20stop-opacity%3D%22.95%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%235b3d2b%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22120%22%20height%3D%22120%22%20fill%3D%22url(%23av1bg)%22%2F%3E%3Cpath%20d%3D%22M8%20120%20Q14%2092%2060%2090%20Q106%2092%20112%20120Z%22%20fill%3D%22%23121212%22%2F%3E%3Crect%20x%3D%2240%22%20y%3D%2282%22%20width%3D%2240%22%20height%3D%2216%22%20rx%3D%227%22%20fill%3D%22%231e1e1e%22%2F%3E%3Cpath%20d%3D%22M26%2056%20L28%2014%20L54%2036Z%22%20fill%3D%22url(%23av1f)%22%2F%3E%3Cpath%20d%3D%22M94%2056%20L92%2014%20L66%2036Z%22%20fill%3D%22url(%23av1f)%22%2F%3E%3Cpath%20d%3D%22M31%2046%20L32%2022%20L48%2036Z%22%20fill%3D%22%23ffb3b8%22%20opacity%3D%22.55%22%2F%3E%3Cpath%20d%3D%22M89%2046%20L88%2022%20L72%2036Z%22%20fill%3D%22%23ffb3b8%22%20opacity%3D%22.55%22%2F%3E%3Cpath%20d%3D%22M26%2056%20L28%2014%20L54%2036Z%20M94%2056%20L92%2014%20L66%2036Z%22%20fill%3D%22%235b3d2b%22%20opacity%3D%22.75%22%2F%3E%3Cellipse%20cx%3D%2260%22%20cy%3D%2260%22%20rx%3D%2238%22%20ry%3D%2233%22%20fill%3D%22url(%23av1f)%22%2F%3E%3Cellipse%20cx%3D%2260%22%20cy%3D%2268%22%20rx%3D%2226%22%20ry%3D%2222%22%20fill%3D%22url(%23av1p)%22%2F%3E%3Cellipse%20cx%3D%2252%22%20cy%3D%2273%22%20rx%3D%2211%22%20ry%3D%228.5%22%20fill%3D%22%23f8efe2%22%2F%3E%3Cellipse%20cx%3D%2268%22%20cy%3D%2273%22%20rx%3D%2211%22%20ry%3D%228.5%22%20fill%3D%22%23f8efe2%22%2F%3E%3Cellipse%20cx%3D%2260%22%20cy%3D%2280%22%20rx%3D%228%22%20ry%3D%225%22%20fill%3D%22%23f8efe2%22%2F%3E%3Cellipse%20cx%3D%2246%22%20cy%3D%2257%22%20rx%3D%227.5%22%20ry%3D%226.6%22%20fill%3D%22url(%23av1e)%22%2F%3E%3Cellipse%20cx%3D%2274%22%20cy%3D%2257%22%20rx%3D%227.5%22%20ry%3D%226.6%22%20fill%3D%22url(%23av1e)%22%2F%3E%3Cellipse%20cx%3D%2246%22%20cy%3D%2257%22%20rx%3D%221.8%22%20ry%3D%225.4%22%20fill%3D%22%230b0b0b%22%2F%3E%3Cellipse%20cx%3D%2274%22%20cy%3D%2257%22%20rx%3D%221.8%22%20ry%3D%225.4%22%20fill%3D%22%230b0b0b%22%2F%3E%3Ccircle%20cx%3D%2248.5%22%20cy%3D%2254%22%20r%3D%221.7%22%20fill%3D%22%23fff%22%2F%3E%3Ccircle%20cx%3D%2276.5%22%20cy%3D%2254%22%20r%3D%221.7%22%20fill%3D%22%23fff%22%2F%3E%3Cpath%20d%3D%22M38.5%2055%20Q46%2049%2053.5%2055%20M66.5%2055%20Q74%2049%2081.5%2055%22%20stroke%3D%22%23000%22%20stroke-opacity%3D%22.35%22%20stroke-width%3D%221.4%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M56%2068%20Q60%2066%2064%2068%20L60%2072.5Z%22%20fill%3D%22%23e58c9a%22%2F%3E%3Cpath%20d%3D%22M60%2072.5%20v3%20M60%2075.5%20q-4%204%20-8%201%20M60%2075.5%20q4%204%208%201%22%20stroke%3D%22%233a2a2a%22%20stroke-opacity%3D%22.6%22%20stroke-width%3D%221.3%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%3Cg%20stroke%3D%22%23fff%22%20stroke-opacity%3D%22.75%22%20stroke-width%3D%22.9%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M44%2074%20L16%2070%20M44%2077%20L17%2079%20M76%2074%20L104%2070%20M76%2077%20L103%2079%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M30%2030%20Q34%2012%2062%2012%20Q90%2014%2090%2030%20Q60%2038%2030%2030Z%22%20fill%3D%22%23b8323a%22%2F%3E%3Ccircle%20cx%3D%2262%22%20cy%3D%2211%22%20r%3D%223%22%20fill%3D%22%23b8323a%22%2F%3E%3C%2Fsvg%3E" alt=""></span>
+          <div><span class="t-ui-h3">Вера Ильина</span><span class="t-caption author">Режиссёр · Сценарист</span></div>
+        </div>
+        <div class="prof-stats stg">
+          <div class="stat" style="--i:0"><span class="t-caption">В предпочтениях</span><span class="t-stat num" data-count="612">612</span></div>
+          <div class="stat" style="--i:1"><span class="t-caption">Авторских комментариев</span><span class="t-stat num" data-count="4">4</span></div>
+          <div class="stat" style="--i:2"><span class="t-caption">Авторских лайков</span><span class="t-stat num" data-count="63">63</span></div>
+        </div>
+        <span class="t-label muted">Фильмография</span>
+        <div class="films">
+          <div class="film"><img src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20300%20450%22%20preserveAspectRatio%3D%22xMidYMid%20slice%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22pp0b%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%230a1020%22%2F%3E%3Cstop%20offset%3D%22.6%22%20stop-color%3D%22%2316263b%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23060a14%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22pp0m%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23d9dee8%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%236c7588%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22pp0g%22%3E%3Cstop%20stop-color%3D%22%2358d9eb%22%20stop-opacity%3D%22.45%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2358d9eb%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22300%22%20height%3D%22450%22%20fill%3D%22url(%23pp0b)%22%2F%3E%3Ccircle%20cx%3D%22150%22%20cy%3D%22150%22%20r%3D%22150%22%20fill%3D%22url(%23pp0g)%22%2F%3E%3Cpath%20d%3D%22M86%20250%20L-210%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M102%20250%20L-120%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M118%20250%20L-30%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M134%20250%20L60%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M150%20250%20L150%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M166%20250%20L240%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M182%20250%20L330%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M198%20250%20L420%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M214%20250%20L510%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M0%20258%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.08%22%2F%3E%3Cpath%20d%3D%22M0%20264%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.11%22%2F%3E%3Cpath%20d%3D%22M0%20282%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.14%22%2F%3E%3Cpath%20d%3D%22M0%20312%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.16999999999999998%22%2F%3E%3Cpath%20d%3D%22M0%20354%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.2%22%2F%3E%3Cpath%20d%3D%22M0%20408%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.22999999999999998%22%2F%3E%3Cellipse%20cx%3D%22150%22%20cy%3D%22268%22%20rx%3D%2286%22%20ry%3D%2250%22%20fill%3D%22%233b4354%22%2F%3E%3Cpath%20d%3D%22M75.9%20136.6%20L89.2%2062.5%20L132.8%2099.2Z%22%20fill%3D%22url(%23pp0m)%22%2F%3E%3Cpath%20d%3D%22M224.1%20136.6%20L210.8%2062.5%20L167.2%2099.2Z%22%20fill%3D%22url(%23pp0m)%22%2F%3E%3Cpath%20d%3D%22M87.6%20121%20L92.3%2080.4%20L117.2%20100.7Z%22%20fill%3D%22%239aa4b8%22%20opacity%3D%22.55%22%2F%3E%3Cpath%20d%3D%22M212.4%20121%20L207.7%2080.4%20L182.8%20100.7Z%22%20fill%3D%22%239aa4b8%22%20opacity%3D%22.55%22%2F%3E%3Cellipse%20cx%3D%22150%22%20cy%3D%22160%22%20rx%3D%2278%22%20ry%3D%2267.1%22%20fill%3D%22url(%23pp0m)%22%2F%3E%3Cpath%20d%3D%22M142.2%20174%20L157.8%20174%20L150%20183.4Z%22%20fill%3D%22%239aa4b8%22%2F%3E%3Cpath%20d%3D%22M150%20183.4%20q-9.4%2012.5%20-18.7%203.1%20M150%20183.4%20q9.4%2012.5%2018.7%203.1%22%20stroke%3D%22%23120d0a%22%20stroke-opacity%3D%22.5%22%20stroke-width%3D%222.7%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%3Cg%20stroke%3D%22%23fff%22%20stroke-opacity%3D%22.55%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M126.6%20181.8%20L60.3%20170.9%20M126.6%20188.1%20L62.6%20192.8%22%2F%3E%3Cpath%20d%3D%22M173.4%20181.8%20L239.7%20170.9%20M173.4%20188.1%20L237.4%20192.8%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M98%20112%20Q150%2096%20202%20112%22%20stroke%3D%22%232c3240%22%20stroke-width%3D%222%22%20fill%3D%22none%22%2F%3E%3Ccircle%20cx%3D%22108%22%20cy%3D%22196%22%20r%3D%223%22%20fill%3D%22%232c3240%22%2F%3E%3Ccircle%20cx%3D%22192%22%20cy%3D%22196%22%20r%3D%223%22%20fill%3D%22%232c3240%22%2F%3E%3Crect%20x%3D%2296%22%20y%3D%22134%22%20width%3D%22108%22%20height%3D%2226%22%20rx%3D%2213%22%20fill%3D%22%23071018%22%2F%3E%3Crect%20x%3D%22102%22%20y%3D%22140%22%20width%3D%2296%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%2358d9eb%22%2F%3E%3Crect%20x%3D%22102%22%20y%3D%22140%22%20width%3D%2296%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%23bff6ff%22%20opacity%3D%22.5%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%22330%22%20width%3D%22300%22%20height%3D%22120%22%20fill%3D%22%2305080f%22%20opacity%3D%22.55%22%2F%3E%3Ctext%20x%3D%22150%22%20y%3D%22382%22%20text-anchor%3D%22middle%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-weight%3D%22900%22%20font-size%3D%2236%22%20letter-spacing%3D%22-1%22%20fill%3D%22%23fff%22%20textLength%3D%22262%22%20lengthAdjust%3D%22spacingAndGlyphs%22%3E%D0%9A%D0%9E%D0%A2%D0%9E%D0%9C%D0%98%D0%9D%D0%90%D0%A2%D0%9E%D0%A0%3C%2Ftext%3E%3Ctext%20x%3D%22150%22%20y%3D%22420%22%20text-anchor%3D%22middle%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-weight%3D%22700%22%20font-size%3D%2211.5%22%20letter-spacing%3D%222.4%22%20fill%3D%22%2358d9eb%22%3E%D0%A1%D0%A3%D0%94%D0%9D%D0%AB%D0%99%20%D0%9A%D0%9E%D0%A0%D0%9C%3C%2Ftext%3E%3C%2Fsvg%3E" alt=""><div class="meta"><span class="t-strong">Котоминатор: Судный корм</span><span class="t-caption muted">2025 · Фантастика</span><span class="t-caption author credit" title="Режиссёр · Сценарист">Режиссёр · Сценарист</span></div><div class="chips"><span class="score-chip k-reviews" title="По рецензиям">79</span><span class="score-chip k-ratings" title="Без рецензий">75</span><span class="score-chip k-critics" title="Медиа">73</span></div></div>
+          <div class="film"><img src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20300%20450%22%20preserveAspectRatio%3D%22xMidYMid%20slice%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22pp1b%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23120f3a%22%2F%3E%3Cstop%20offset%3D%22.7%22%20stop-color%3D%22%234a2f8a%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231a1240%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22300%22%20height%3D%22450%22%20fill%3D%22url(%23pp1b)%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%22150%22%20r%3D%220.8%22%20fill%3D%22%23fff%22%20opacity%3D%220.68%22%2F%3E%3Ccircle%20cx%3D%2237%22%20cy%3D%2248%22%20r%3D%221.5%22%20fill%3D%22%23fff%22%20opacity%3D%220.79%22%2F%3E%3Ccircle%20cx%3D%22272%22%20cy%3D%22228%22%20r%3D%220.7%22%20fill%3D%22%23fff%22%20opacity%3D%220.77%22%2F%3E%3Ccircle%20cx%3D%22237%22%20cy%3D%22197%22%20r%3D%220.3%22%20fill%3D%22%23fff%22%20opacity%3D%220.29%22%2F%3E%3Ccircle%20cx%3D%22226%22%20cy%3D%2244%22%20r%3D%220.7%22%20fill%3D%22%23fff%22%20opacity%3D%220.41%22%2F%3E%3Ccircle%20cx%3D%22280%22%20cy%3D%2215%22%20r%3D%220.5%22%20fill%3D%22%23fff%22%20opacity%3D%220.66%22%2F%3E%3Ccircle%20cx%3D%2223%22%20cy%3D%223%22%20r%3D%221.3%22%20fill%3D%22%23fff%22%20opacity%3D%220.50%22%2F%3E%3Ccircle%20cx%3D%22271%22%20cy%3D%2297%22%20r%3D%220.7%22%20fill%3D%22%23fff%22%20opacity%3D%220.54%22%2F%3E%3Ccircle%20cx%3D%22296%22%20cy%3D%22271%22%20r%3D%221.6%22%20fill%3D%22%23fff%22%20opacity%3D%220.39%22%2F%3E%3Ccircle%20cx%3D%226%22%20cy%3D%22112%22%20r%3D%221.4%22%20fill%3D%22%23fff%22%20opacity%3D%220.81%22%2F%3E%3Ccircle%20cx%3D%22208%22%20cy%3D%22201%22%20r%3D%221.2%22%20fill%3D%22%23fff%22%20opacity%3D%220.44%22%2F%3E%3Ccircle%20cx%3D%22114%22%20cy%3D%22114%22%20r%3D%220.3%22%20fill%3D%22%23fff%22%20opacity%3D%220.74%22%2F%3E%3Ccircle%20cx%3D%2254%22%20cy%3D%2288%22%20r%3D%221.0%22%20fill%3D%22%23fff%22%20opacity%3D%220.30%22%2F%3E%3Ccircle%20cx%3D%22155%22%20cy%3D%2267%22%20r%3D%221.4%22%20fill%3D%22%23fff%22%20opacity%3D%220.35%22%2F%3E%3Ccircle%20cx%3D%2273%22%20cy%3D%2217%22%20r%3D%220.7%22%20fill%3D%22%23fff%22%20opacity%3D%220.34%22%2F%3E%3Ccircle%20cx%3D%2257%22%20cy%3D%22176%22%20r%3D%221.4%22%20fill%3D%22%23fff%22%20opacity%3D%220.29%22%2F%3E%3Ccircle%20cx%3D%22224%22%20cy%3D%22116%22%20r%3D%220.4%22%20fill%3D%22%23fff%22%20opacity%3D%220.68%22%2F%3E%3Ccircle%20cx%3D%222%22%20cy%3D%22120%22%20r%3D%221.0%22%20fill%3D%22%23fff%22%20opacity%3D%220.43%22%2F%3E%3Ccircle%20cx%3D%2279%22%20cy%3D%22109%22%20r%3D%220.4%22%20fill%3D%22%23fff%22%20opacity%3D%220.74%22%2F%3E%3Ccircle%20cx%3D%22264%22%20cy%3D%22285%22%20r%3D%220.9%22%20fill%3D%22%23fff%22%20opacity%3D%220.63%22%2F%3E%3Ccircle%20cx%3D%22219%22%20cy%3D%22115%22%20r%3D%220.7%22%20fill%3D%22%23fff%22%20opacity%3D%220.30%22%2F%3E%3Ccircle%20cx%3D%22149%22%20cy%3D%22288%22%20r%3D%221.6%22%20fill%3D%22%23fff%22%20opacity%3D%220.72%22%2F%3E%3Ccircle%20cx%3D%22297%22%20cy%3D%22265%22%20r%3D%220.9%22%20fill%3D%22%23fff%22%20opacity%3D%220.74%22%2F%3E%3Ccircle%20cx%3D%22201%22%20cy%3D%22226%22%20r%3D%220.6%22%20fill%3D%22%23fff%22%20opacity%3D%220.29%22%2F%3E%3Ccircle%20cx%3D%22249%22%20cy%3D%22297%22%20r%3D%220.5%22%20fill%3D%22%23fff%22%20opacity%3D%220.79%22%2F%3E%3Ccircle%20cx%3D%2263%22%20cy%3D%22267%22%20r%3D%220.9%22%20fill%3D%22%23fff%22%20opacity%3D%220.48%22%2F%3E%3Ccircle%20cx%3D%22276%22%20cy%3D%22258%22%20r%3D%220.6%22%20fill%3D%22%23fff%22%20opacity%3D%220.63%22%2F%3E%3Ccircle%20cx%3D%2246%22%20cy%3D%22141%22%20r%3D%220.5%22%20fill%3D%22%23fff%22%20opacity%3D%220.38%22%2F%3E%3Ccircle%20cx%3D%22161%22%20cy%3D%22277%22%20r%3D%221.4%22%20fill%3D%22%23fff%22%20opacity%3D%220.85%22%2F%3E%3Ccircle%20cx%3D%2211%22%20cy%3D%2213%22%20r%3D%221.1%22%20fill%3D%22%23fff%22%20opacity%3D%220.54%22%2F%3E%3Ccircle%20cx%3D%22219%22%20cy%3D%2265%22%20r%3D%220.4%22%20fill%3D%22%23fff%22%20opacity%3D%220.77%22%2F%3E%3Ccircle%20cx%3D%22153%22%20cy%3D%22146%22%20r%3D%221.4%22%20fill%3D%22%23fff%22%20opacity%3D%220.58%22%2F%3E%3Ccircle%20cx%3D%22131%22%20cy%3D%2210%22%20r%3D%221.4%22%20fill%3D%22%23fff%22%20opacity%3D%220.48%22%2F%3E%3Ccircle%20cx%3D%22257%22%20cy%3D%22284%22%20r%3D%220.7%22%20fill%3D%22%23fff%22%20opacity%3D%220.47%22%2F%3E%3Ccircle%20cx%3D%22149%22%20cy%3D%22241%22%20r%3D%220.5%22%20fill%3D%22%23fff%22%20opacity%3D%220.29%22%2F%3E%3Ccircle%20cx%3D%2264%22%20cy%3D%2246%22%20r%3D%221.0%22%20fill%3D%22%23fff%22%20opacity%3D%220.74%22%2F%3E%3Ccircle%20cx%3D%22205%22%20cy%3D%22230%22%20r%3D%221.2%22%20fill%3D%22%23fff%22%20opacity%3D%220.69%22%2F%3E%3Ccircle%20cx%3D%22237%22%20cy%3D%2285%22%20r%3D%221.4%22%20fill%3D%22%23fff%22%20opacity%3D%220.41%22%2F%3E%3Ccircle%20cx%3D%22118%22%20cy%3D%22239%22%20r%3D%220.4%22%20fill%3D%22%23fff%22%20opacity%3D%220.82%22%2F%3E%3Ccircle%20cx%3D%22122%22%20cy%3D%22112%22%20r%3D%221.4%22%20fill%3D%22%23fff%22%20opacity%3D%220.41%22%2F%3E%3Ccircle%20cx%3D%22213%22%20cy%3D%2216%22%20r%3D%220.8%22%20fill%3D%22%23fff%22%20opacity%3D%220.77%22%2F%3E%3Ccircle%20cx%3D%22162%22%20cy%3D%2240%22%20r%3D%220.4%22%20fill%3D%22%23fff%22%20opacity%3D%220.67%22%2F%3E%3Ccircle%20cx%3D%221%22%20cy%3D%22239%22%20r%3D%220.9%22%20fill%3D%22%23fff%22%20opacity%3D%220.75%22%2F%3E%3Ccircle%20cx%3D%22225%22%20cy%3D%2225%22%20r%3D%220.8%22%20fill%3D%22%23fff%22%20opacity%3D%220.81%22%2F%3E%3Ccircle%20cx%3D%22242%22%20cy%3D%22170%22%20r%3D%221.4%22%20fill%3D%22%23fff%22%20opacity%3D%220.64%22%2F%3E%3Ccircle%20cx%3D%22192%22%20cy%3D%22178%22%20r%3D%220.8%22%20fill%3D%22%23fff%22%20opacity%3D%220.67%22%2F%3E%3Ccircle%20cx%3D%22114%22%20cy%3D%2227%22%20r%3D%221.5%22%20fill%3D%22%23fff%22%20opacity%3D%220.41%22%2F%3E%3Ccircle%20cx%3D%22226%22%20cy%3D%22107%22%20r%3D%221.5%22%20fill%3D%22%23fff%22%20opacity%3D%220.62%22%2F%3E%3Ccircle%20cx%3D%22122%22%20cy%3D%22160%22%20r%3D%220.8%22%20fill%3D%22%23fff%22%20opacity%3D%220.72%22%2F%3E%3Ccircle%20cx%3D%2223%22%20cy%3D%227%22%20r%3D%220.8%22%20fill%3D%22%23fff%22%20opacity%3D%220.65%22%2F%3E%3Ccircle%20cx%3D%2227%22%20cy%3D%22103%22%20r%3D%221.3%22%20fill%3D%22%23fff%22%20opacity%3D%220.33%22%2F%3E%3Ccircle%20cx%3D%2252%22%20cy%3D%22149%22%20r%3D%220.6%22%20fill%3D%22%23fff%22%20opacity%3D%220.71%22%2F%3E%3Ccircle%20cx%3D%22290%22%20cy%3D%22260%22%20r%3D%221.5%22%20fill%3D%22%23fff%22%20opacity%3D%220.64%22%2F%3E%3Ccircle%20cx%3D%22108%22%20cy%3D%22260%22%20r%3D%221.0%22%20fill%3D%22%23fff%22%20opacity%3D%220.61%22%2F%3E%3Ccircle%20cx%3D%2264%22%20cy%3D%22127%22%20r%3D%220.4%22%20fill%3D%22%23fff%22%20opacity%3D%220.47%22%2F%3E%3Ccircle%20cx%3D%22250%22%20cy%3D%22292%22%20r%3D%221.3%22%20fill%3D%22%23fff%22%20opacity%3D%220.39%22%2F%3E%3Ccircle%20cx%3D%22167%22%20cy%3D%2287%22%20r%3D%221.2%22%20fill%3D%22%23fff%22%20opacity%3D%220.83%22%2F%3E%3Ccircle%20cx%3D%22237%22%20cy%3D%22125%22%20r%3D%220.9%22%20fill%3D%22%23fff%22%20opacity%3D%220.80%22%2F%3E%3Ccircle%20cx%3D%22101%22%20cy%3D%22193%22%20r%3D%221.0%22%20fill%3D%22%23fff%22%20opacity%3D%220.73%22%2F%3E%3Ccircle%20cx%3D%2229%22%20cy%3D%22142%22%20r%3D%221.6%22%20fill%3D%22%23fff%22%20opacity%3D%220.72%22%2F%3E%3Ccircle%20cx%3D%2270%22%20cy%3D%2280%22%20r%3D%2226%22%20fill%3D%22%23fff6d6%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2274%22%20r%3D%2224%22%20fill%3D%22%23120f3a%22%20opacity%3D%22.9%22%2F%3E%3Cg%20fill%3D%22%2322195a%22%3E%3Crect%20x%3D%220%22%20y%3D%22250%22%20width%3D%2240%22%20height%3D%2280%22%2F%3E%3Crect%20x%3D%2240%22%20y%3D%22226%22%20width%3D%2234%22%20height%3D%22104%22%2F%3E%3Crect%20x%3D%22226%22%20y%3D%22236%22%20width%3D%2240%22%20height%3D%2294%22%2F%3E%3Crect%20x%3D%22266%22%20y%3D%22210%22%20width%3D%2234%22%20height%3D%22120%22%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%22%23ffd27a%22%20opacity%3D%22.7%22%3E%3Crect%20x%3D%2248%22%20y%3D%22240%22%20width%3D%226%22%20height%3D%228%22%2F%3E%3Crect%20x%3D%2260%22%20y%3D%22262%22%20width%3D%226%22%20height%3D%228%22%2F%3E%3Crect%20x%3D%22236%22%20y%3D%22250%22%20width%3D%226%22%20height%3D%228%22%2F%3E%3Crect%20x%3D%22276%22%20y%3D%22228%22%20width%3D%226%22%20height%3D%228%22%2F%3E%3C%2Fg%3E%3Cellipse%20cx%3D%22150%22%20cy%3D%22300%22%20rx%3D%2258%22%20ry%3D%2240%22%20fill%3D%22%23c9c3e6%22%2F%3E%3Cpath%20d%3D%22M118%20284%20L182%20284%20L176%20330%20H124Z%22%20fill%3D%22%23ffad61%22%20opacity%3D%22.85%22%2F%3E%3Cpath%20d%3D%22M96.8%20205.2%20L106.3%20152%20L137.7%20178.3Z%22%20fill%3D%22%23c9c3e6%22%2F%3E%3Cpath%20d%3D%22M203.2%20205.2%20L193.7%20152%20L162.3%20178.3Z%22%20fill%3D%22%23c9c3e6%22%2F%3E%3Cpath%20d%3D%22M105.2%20194%20L108.6%20164.9%20L126.5%20179.4Z%22%20fill%3D%22%23ff9fb2%22%20opacity%3D%22.55%22%2F%3E%3Cpath%20d%3D%22M194.8%20194%20L191.4%20164.9%20L173.5%20179.4Z%22%20fill%3D%22%23ff9fb2%22%20opacity%3D%22.55%22%2F%3E%3Cellipse%20cx%3D%22150%22%20cy%3D%22222%22%20rx%3D%2256%22%20ry%3D%2248.2%22%20fill%3D%22%23c9c3e6%22%2F%3E%3Cellipse%20cx%3D%22128.7%22%20cy%3D%22217.5%22%20rx%3D%2211.2%22%20ry%3D%2213.4%22%20fill%3D%22%23ffd27a%22%2F%3E%3Cellipse%20cx%3D%22171.3%22%20cy%3D%22217.5%22%20rx%3D%2211.2%22%20ry%3D%2213.4%22%20fill%3D%22%23ffd27a%22%2F%3E%3Cellipse%20cx%3D%22128.7%22%20cy%3D%22217.5%22%20rx%3D%223.4%22%20ry%3D%2210.6%22%20fill%3D%22%23120d0a%22%2F%3E%3Cellipse%20cx%3D%22171.3%22%20cy%3D%22217.5%22%20rx%3D%223.4%22%20ry%3D%2210.6%22%20fill%3D%22%23120d0a%22%2F%3E%3Cpath%20d%3D%22M144.4%20232.1%20L155.6%20232.1%20L150%20238.8Z%22%20fill%3D%22%23ff9fb2%22%2F%3E%3Cpath%20d%3D%22M150%20238.8%20q-6.7%209%20-13.4%202.2%20M150%20238.8%20q6.7%209%2013.4%202.2%22%20stroke%3D%22%23120d0a%22%20stroke-opacity%3D%22.5%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%3Cg%20stroke%3D%22%23fff%22%20stroke-opacity%3D%22.55%22%20stroke-width%3D%221.1%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M133.2%20237.7%20L85.6%20229.8%20M133.2%20242.2%20L87.3%20245.5%22%2F%3E%3Cpath%20d%3D%22M166.8%20237.7%20L214.4%20229.8%20M166.8%20242.2%20L212.7%20245.5%22%2F%3E%3C%2Fg%3E%3Crect%20x%3D%22118%22%20y%3D%22142%22%20width%3D%2264%22%20height%3D%2210%22%20rx%3D%223%22%20fill%3D%22%2314112e%22%2F%3E%3Crect%20x%3D%22128%22%20y%3D%22104%22%20width%3D%2244%22%20height%3D%2242%22%20rx%3D%224%22%20fill%3D%22%2314112e%22%2F%3E%3Crect%20x%3D%22128%22%20y%3D%22132%22%20width%3D%2244%22%20height%3D%227%22%20fill%3D%22%23ff708f%22%2F%3E%3Ctext%20x%3D%22150%22%20y%3D%22382%22%20text-anchor%3D%22middle%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-weight%3D%22900%22%20font-size%3D%2236%22%20letter-spacing%3D%22-1%22%20fill%3D%22%23fff%22%3E%D0%9B%D0%90-%D0%9B%D0%90-%D0%9C%D0%AF%D0%A3%3C%2Ftext%3E%3Ctext%20x%3D%22150%22%20y%3D%22420%22%20text-anchor%3D%22middle%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-weight%3D%22700%22%20font-size%3D%2211.5%22%20letter-spacing%3D%222.4%22%20fill%3D%22%23ffd27a%22%3E%D0%93%D0%9E%D0%A0%D0%9E%D0%94%20%D0%9C%D0%A3%D0%A0%D0%9B%D0%AB%D0%9A%D0%90%D0%AE%D0%A9%D0%98%D0%A5%20%D0%97%D0%92%D0%81%D0%97%D0%94%3C%2Ftext%3E%3C%2Fsvg%3E" alt=""><div class="meta"><span class="t-strong">Ла-Ла-Мяу</span><span class="t-caption muted">2022 · Короткий метр</span><span class="t-caption author credit" title="Режиссёр · Сценарист · Продюсер · Монтажёр · Оператор-постановщик">Режиссёр · Сценарист · Продюсер · Монтажёр · Оператор-постановщик</span></div><div class="chips"><span class="score-chip k-reviews" title="По рецензиям">81</span><span class="score-chip k-ratings" title="Без рецензий">78</span><span class="score-chip k-critics dash" title="Медиа: пока нет оценок">—</span></div></div>
+        </div>
+      </div>
+      <div class="card studio rv">
+        <div class="studio-head"><h3 class="t-ui-h3">Эхо Studio</h3><span class="tag tag-author">Для авторов</span></div>
+        <div class="stats stg">
+          <div class="stat" style="--i:0"><span class="t-caption">Рецензий</span><span class="t-stat num" data-count="184">184</span><span class="t-caption delta">+21 за неделю</span></div>
+          <div class="stat" style="--i:1"><span class="t-caption">Оценок</span><span class="t-stat num" data-count="2340">2 340</span><span class="t-caption delta">+196 за неделю</span></div>
+          <div class="stat" style="--i:2"><span class="t-caption">Предпочтения</span><span class="t-stat num" data-count="612">612</span><span class="t-caption delta">+48 за неделю</span></div>
+        </div>
+        <div class="result"><span class="t-label muted">Средняя оценка по вашим работам</span><span class="score-chip k-reviews num">79</span></div>
+        <span class="t-label muted">Последняя рецензия</span>
+        <div class="last">
+          <div class="last-head">
+            <div class="who"><span class="avatar">М</span><div><span class="t-strong">marina_k</span><span class="t-caption faint">13.11.26 · «Котоминатор: Судный корм»</span></div></div>
+            <span class="score-chip k-reviews num">84</span>
+          </div>
+          <p class="t-body secondary last-text">Финал не стал сентиментальным, и это главное. Робот так и не мурлычет, но к последней сцене это уже не нужно: всё сказано светом и паузами.</p>
+          <div class="last-foot"><span class="likes"><svg class="ic"><use href="#i-heart"/></svg>12</span><span class="sp"></span><label class="pill"><input type="checkbox" class="sr"><svg class="ic"><use href="#i-star"/></svg><span class="p-off">Поставить лайк автора</span><span class="p-on">Лайк автора поставлен</span></label></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Landing / Benefits + Card / Author Comment -->
+<section class="sec" aria-labelledby="s4">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="t-eyebrow">Авторский комментарий</span>
+      <h2 id="s4" class="t-h2">Расскажите о фильме то, что не видно с экрана</h2>
+    </div>
+    <div class="benefits keep stg rv">
+      <div class="card info" style="--i:0"><span class="ic-tile"><svg class="ic"><use href="#i-comment"/></svg></span><h3 class="t-ui-h3">Контекст</h3><p class="t-body muted"><span class="lg">Что было важно передать и на что стоит обратить внимание.</span><span class="sm">Что важно передать зрителю.</span></p></div>
+      <div class="card info" style="--i:1"><span class="ic-tile"><svg class="ic"><use href="#i-film"/></svg></span><h3 class="t-ui-h3">Подход к созданию</h3><p class="t-body muted"><span class="lg">Почему фильм снят именно так: решения, сомнения, ограничения.</span><span class="sm">Почему снято именно так.</span></p></div>
+      <div class="card info" style="--i:2"><span class="ic-tile"><svg class="ic"><use href="#i-star"/></svg></span><h3 class="t-ui-h3">Интересные факты</h3><p class="t-body muted"><span class="lg">Истории со съёмочной площадки, которые меняют взгляд на сцены.</span><span class="sm">Истории со съёмок.</span></p></div>
+    </div>
+    <article class="card card-author review rv cm-card" aria-label="Пример авторского комментария">
+      <div class="cm-head">
+        <div class="who">
+          <span class="avatar is-author"><img src="data:image/svg+xml;charset=utf-8,%3Csvg%20width%3D%22120%22%20height%3D%22120%22%20viewBox%3D%220%200%20120%20120%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20aria-hidden%3D%22true%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22av1bg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%234a2c14%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%239a5a26%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22av1f%22%20cx%3D%22.45%22%20cy%3D%22.38%22%20r%3D%22.7%22%3E%3Cstop%20stop-color%3D%22%23f3e7d3%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23c9b18f%22%2F%3E%3C%2FradialGradient%3E%3CradialGradient%20id%3D%22av1e%22%20cx%3D%22.5%22%20cy%3D%22.45%22%20r%3D%22.6%22%3E%3Cstop%20stop-color%3D%22%23fff%22%20stop-opacity%3D%22.55%22%2F%3E%3Cstop%20offset%3D%22.35%22%20stop-color%3D%22%235aa9ff%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%231c2a12%22%20stop-opacity%3D%22.9%22%2F%3E%3C%2FradialGradient%3E%3CradialGradient%20id%3D%22av1p%22%20cx%3D%22.5%22%20cy%3D%22.62%22%20r%3D%22.42%22%3E%3Cstop%20stop-color%3D%22%235b3d2b%22%20stop-opacity%3D%22.95%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%235b3d2b%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22120%22%20height%3D%22120%22%20fill%3D%22url(%23av1bg)%22%2F%3E%3Cpath%20d%3D%22M8%20120%20Q14%2092%2060%2090%20Q106%2092%20112%20120Z%22%20fill%3D%22%23121212%22%2F%3E%3Crect%20x%3D%2240%22%20y%3D%2282%22%20width%3D%2240%22%20height%3D%2216%22%20rx%3D%227%22%20fill%3D%22%231e1e1e%22%2F%3E%3Cpath%20d%3D%22M26%2056%20L28%2014%20L54%2036Z%22%20fill%3D%22url(%23av1f)%22%2F%3E%3Cpath%20d%3D%22M94%2056%20L92%2014%20L66%2036Z%22%20fill%3D%22url(%23av1f)%22%2F%3E%3Cpath%20d%3D%22M31%2046%20L32%2022%20L48%2036Z%22%20fill%3D%22%23ffb3b8%22%20opacity%3D%22.55%22%2F%3E%3Cpath%20d%3D%22M89%2046%20L88%2022%20L72%2036Z%22%20fill%3D%22%23ffb3b8%22%20opacity%3D%22.55%22%2F%3E%3Cpath%20d%3D%22M26%2056%20L28%2014%20L54%2036Z%20M94%2056%20L92%2014%20L66%2036Z%22%20fill%3D%22%235b3d2b%22%20opacity%3D%22.75%22%2F%3E%3Cellipse%20cx%3D%2260%22%20cy%3D%2260%22%20rx%3D%2238%22%20ry%3D%2233%22%20fill%3D%22url(%23av1f)%22%2F%3E%3Cellipse%20cx%3D%2260%22%20cy%3D%2268%22%20rx%3D%2226%22%20ry%3D%2222%22%20fill%3D%22url(%23av1p)%22%2F%3E%3Cellipse%20cx%3D%2252%22%20cy%3D%2273%22%20rx%3D%2211%22%20ry%3D%228.5%22%20fill%3D%22%23f8efe2%22%2F%3E%3Cellipse%20cx%3D%2268%22%20cy%3D%2273%22%20rx%3D%2211%22%20ry%3D%228.5%22%20fill%3D%22%23f8efe2%22%2F%3E%3Cellipse%20cx%3D%2260%22%20cy%3D%2280%22%20rx%3D%228%22%20ry%3D%225%22%20fill%3D%22%23f8efe2%22%2F%3E%3Cellipse%20cx%3D%2246%22%20cy%3D%2257%22%20rx%3D%227.5%22%20ry%3D%226.6%22%20fill%3D%22url(%23av1e)%22%2F%3E%3Cellipse%20cx%3D%2274%22%20cy%3D%2257%22%20rx%3D%227.5%22%20ry%3D%226.6%22%20fill%3D%22url(%23av1e)%22%2F%3E%3Cellipse%20cx%3D%2246%22%20cy%3D%2257%22%20rx%3D%221.8%22%20ry%3D%225.4%22%20fill%3D%22%230b0b0b%22%2F%3E%3Cellipse%20cx%3D%2274%22%20cy%3D%2257%22%20rx%3D%221.8%22%20ry%3D%225.4%22%20fill%3D%22%230b0b0b%22%2F%3E%3Ccircle%20cx%3D%2248.5%22%20cy%3D%2254%22%20r%3D%221.7%22%20fill%3D%22%23fff%22%2F%3E%3Ccircle%20cx%3D%2276.5%22%20cy%3D%2254%22%20r%3D%221.7%22%20fill%3D%22%23fff%22%2F%3E%3Cpath%20d%3D%22M38.5%2055%20Q46%2049%2053.5%2055%20M66.5%2055%20Q74%2049%2081.5%2055%22%20stroke%3D%22%23000%22%20stroke-opacity%3D%22.35%22%20stroke-width%3D%221.4%22%20fill%3D%22none%22%2F%3E%3Cpath%20d%3D%22M56%2068%20Q60%2066%2064%2068%20L60%2072.5Z%22%20fill%3D%22%23e58c9a%22%2F%3E%3Cpath%20d%3D%22M60%2072.5%20v3%20M60%2075.5%20q-4%204%20-8%201%20M60%2075.5%20q4%204%208%201%22%20stroke%3D%22%233a2a2a%22%20stroke-opacity%3D%22.6%22%20stroke-width%3D%221.3%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%3Cg%20stroke%3D%22%23fff%22%20stroke-opacity%3D%22.75%22%20stroke-width%3D%22.9%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M44%2074%20L16%2070%20M44%2077%20L17%2079%20M76%2074%20L104%2070%20M76%2077%20L103%2079%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M30%2030%20Q34%2012%2062%2012%20Q90%2014%2090%2030%20Q60%2038%2030%2030Z%22%20fill%3D%22%23b8323a%22%2F%3E%3Ccircle%20cx%3D%2262%22%20cy%3D%2211%22%20r%3D%223%22%20fill%3D%22%23b8323a%22%2F%3E%3C%2Fsvg%3E" alt=""></span>
+          <div><span class="t-strong">Вера Ильина</span><span class="t-caption author">Режиссёр</span><span class="t-caption faint">18.10.26</span></div>
+        </div>
+        <div class="film-mini cm-film"><img src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20300%20450%22%20preserveAspectRatio%3D%22xMidYMid%20slice%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22pp0b%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%230a1020%22%2F%3E%3Cstop%20offset%3D%22.6%22%20stop-color%3D%22%2316263b%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23060a14%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22pp0m%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23d9dee8%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%236c7588%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22pp0g%22%3E%3Cstop%20stop-color%3D%22%2358d9eb%22%20stop-opacity%3D%22.45%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2358d9eb%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22300%22%20height%3D%22450%22%20fill%3D%22url(%23pp0b)%22%2F%3E%3Ccircle%20cx%3D%22150%22%20cy%3D%22150%22%20r%3D%22150%22%20fill%3D%22url(%23pp0g)%22%2F%3E%3Cpath%20d%3D%22M86%20250%20L-210%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M102%20250%20L-120%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M118%20250%20L-30%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M134%20250%20L60%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M150%20250%20L150%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M166%20250%20L240%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M182%20250%20L330%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M198%20250%20L420%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M214%20250%20L510%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M0%20258%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.08%22%2F%3E%3Cpath%20d%3D%22M0%20264%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.11%22%2F%3E%3Cpath%20d%3D%22M0%20282%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.14%22%2F%3E%3Cpath%20d%3D%22M0%20312%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.16999999999999998%22%2F%3E%3Cpath%20d%3D%22M0%20354%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.2%22%2F%3E%3Cpath%20d%3D%22M0%20408%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.22999999999999998%22%2F%3E%3Cellipse%20cx%3D%22150%22%20cy%3D%22268%22%20rx%3D%2286%22%20ry%3D%2250%22%20fill%3D%22%233b4354%22%2F%3E%3Cpath%20d%3D%22M75.9%20136.6%20L89.2%2062.5%20L132.8%2099.2Z%22%20fill%3D%22url(%23pp0m)%22%2F%3E%3Cpath%20d%3D%22M224.1%20136.6%20L210.8%2062.5%20L167.2%2099.2Z%22%20fill%3D%22url(%23pp0m)%22%2F%3E%3Cpath%20d%3D%22M87.6%20121%20L92.3%2080.4%20L117.2%20100.7Z%22%20fill%3D%22%239aa4b8%22%20opacity%3D%22.55%22%2F%3E%3Cpath%20d%3D%22M212.4%20121%20L207.7%2080.4%20L182.8%20100.7Z%22%20fill%3D%22%239aa4b8%22%20opacity%3D%22.55%22%2F%3E%3Cellipse%20cx%3D%22150%22%20cy%3D%22160%22%20rx%3D%2278%22%20ry%3D%2267.1%22%20fill%3D%22url(%23pp0m)%22%2F%3E%3Cpath%20d%3D%22M142.2%20174%20L157.8%20174%20L150%20183.4Z%22%20fill%3D%22%239aa4b8%22%2F%3E%3Cpath%20d%3D%22M150%20183.4%20q-9.4%2012.5%20-18.7%203.1%20M150%20183.4%20q9.4%2012.5%2018.7%203.1%22%20stroke%3D%22%23120d0a%22%20stroke-opacity%3D%22.5%22%20stroke-width%3D%222.7%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%3Cg%20stroke%3D%22%23fff%22%20stroke-opacity%3D%22.55%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M126.6%20181.8%20L60.3%20170.9%20M126.6%20188.1%20L62.6%20192.8%22%2F%3E%3Cpath%20d%3D%22M173.4%20181.8%20L239.7%20170.9%20M173.4%20188.1%20L237.4%20192.8%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M98%20112%20Q150%2096%20202%20112%22%20stroke%3D%22%232c3240%22%20stroke-width%3D%222%22%20fill%3D%22none%22%2F%3E%3Ccircle%20cx%3D%22108%22%20cy%3D%22196%22%20r%3D%223%22%20fill%3D%22%232c3240%22%2F%3E%3Ccircle%20cx%3D%22192%22%20cy%3D%22196%22%20r%3D%223%22%20fill%3D%22%232c3240%22%2F%3E%3Crect%20x%3D%2296%22%20y%3D%22134%22%20width%3D%22108%22%20height%3D%2226%22%20rx%3D%2213%22%20fill%3D%22%23071018%22%2F%3E%3Crect%20x%3D%22102%22%20y%3D%22140%22%20width%3D%2296%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%2358d9eb%22%2F%3E%3Crect%20x%3D%22102%22%20y%3D%22140%22%20width%3D%2296%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%23bff6ff%22%20opacity%3D%22.5%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%22330%22%20width%3D%22300%22%20height%3D%22120%22%20fill%3D%22%2305080f%22%20opacity%3D%22.55%22%2F%3E%3Ctext%20x%3D%22150%22%20y%3D%22382%22%20text-anchor%3D%22middle%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-weight%3D%22900%22%20font-size%3D%2236%22%20letter-spacing%3D%22-1%22%20fill%3D%22%23fff%22%20textLength%3D%22262%22%20lengthAdjust%3D%22spacingAndGlyphs%22%3E%D0%9A%D0%9E%D0%A2%D0%9E%D0%9C%D0%98%D0%9D%D0%90%D0%A2%D0%9E%D0%A0%3C%2Ftext%3E%3Ctext%20x%3D%22150%22%20y%3D%22420%22%20text-anchor%3D%22middle%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-weight%3D%22700%22%20font-size%3D%2211.5%22%20letter-spacing%3D%222.4%22%20fill%3D%22%2358d9eb%22%3E%D0%A1%D0%A3%D0%94%D0%9D%D0%AB%D0%99%20%D0%9A%D0%9E%D0%A0%D0%9C%3C%2Ftext%3E%3C%2Fsvg%3E" alt=""><div><span class="t-strong">Котоминатор: Судный корм</span><span class="t-caption muted">2025 · <span class="author">Вера Ильина</span></span></div></div>
+      </div>
+      <h3 class="review-title">Почему робот так и не научился мурлыкать</h3>
+      <p class="t-body secondary typed" id="typed"><span class="ghost">Многие ждали финала, где робот наконец мурлычет, и мы его даже сняли. Но на монтаже поняли: смысл не в том, чтобы стать котом, а в том, чтобы научиться быть рядом. Ещё факт: все сцены робота сняты с настоящим котом в костюме. Работать после шести вечера он отказывался, поэтому ночные сцены мы снимали днём с плотными шторами.</span><span class="live" aria-hidden="true"></span></p>
+      <div class="review-foot"><span class="sp"></span><span class="likes"><svg class="ic"><use href="#i-heart"/></svg>312</span></div>
+    </article>
+  </div>
+</section>
+
+<!-- Лайк автора: Notification + Points / Guide -->
+<section class="sec" aria-labelledby="s5">
+  <div class="wrap">
+    <div class="cols">
+      <div class="like-copy rv">
+        <span class="t-eyebrow">Разговор идёт в обе стороны</span>
+        <h2 id="s5" class="t-h2">Лайк автора — признание от того, кто сделал фильм</h2>
+        <p class="t-body"><span class="lg">Когда создатель фильма отмечает рецензию, зритель понимает, что его услышал человек, ради чьей работы он писал.</span><span class="sm">Зритель видит, что его услышал создатель фильма.</span></p>
+        <p class="t-body"><span class="lg">Поэтому лайк автора — самое ценное действие в системе статусов: 1000 баллов, в четыре раза больше, чем за саму рецензию.</span><span class="sm">Это самое ценное действие в системе статусов: 1000 баллов.</span></p>
+      </div>
+      <div class="stack rv" style="gap:12px">
+        <div class="notice" role="img" aria-label="Пример уведомления">
+          <div class="notice-body"><span class="t-strong"><span class="lg">Вера Ильина поставила лайк автора вашей рецензии «Железный кот, который учится быть котом»</span><span class="sm">Вера Ильина поставила лайк автора вашей рецензии</span></span><span class="tag tag-author">+1000 баллов</span></div>
+          <img src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20300%20450%22%20preserveAspectRatio%3D%22xMidYMid%20slice%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22pp0b%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%230a1020%22%2F%3E%3Cstop%20offset%3D%22.6%22%20stop-color%3D%22%2316263b%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23060a14%22%2F%3E%3C%2FlinearGradient%3E%3ClinearGradient%20id%3D%22pp0m%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%3Cstop%20stop-color%3D%22%23d9dee8%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%236c7588%22%2F%3E%3C%2FlinearGradient%3E%3CradialGradient%20id%3D%22pp0g%22%3E%3Cstop%20stop-color%3D%22%2358d9eb%22%20stop-opacity%3D%22.45%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%2358d9eb%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22300%22%20height%3D%22450%22%20fill%3D%22url(%23pp0b)%22%2F%3E%3Ccircle%20cx%3D%22150%22%20cy%3D%22150%22%20r%3D%22150%22%20fill%3D%22url(%23pp0g)%22%2F%3E%3Cpath%20d%3D%22M86%20250%20L-210%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M102%20250%20L-120%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M118%20250%20L-30%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M134%20250%20L60%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M150%20250%20L150%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M166%20250%20L240%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M182%20250%20L330%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M198%20250%20L420%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M214%20250%20L510%20450%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%22.22%22%2F%3E%3Cpath%20d%3D%22M0%20258%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.08%22%2F%3E%3Cpath%20d%3D%22M0%20264%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.11%22%2F%3E%3Cpath%20d%3D%22M0%20282%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.14%22%2F%3E%3Cpath%20d%3D%22M0%20312%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.16999999999999998%22%2F%3E%3Cpath%20d%3D%22M0%20354%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.2%22%2F%3E%3Cpath%20d%3D%22M0%20408%20H300%22%20stroke%3D%22%2358d9eb%22%20stroke-opacity%3D%220.22999999999999998%22%2F%3E%3Cellipse%20cx%3D%22150%22%20cy%3D%22268%22%20rx%3D%2286%22%20ry%3D%2250%22%20fill%3D%22%233b4354%22%2F%3E%3Cpath%20d%3D%22M75.9%20136.6%20L89.2%2062.5%20L132.8%2099.2Z%22%20fill%3D%22url(%23pp0m)%22%2F%3E%3Cpath%20d%3D%22M224.1%20136.6%20L210.8%2062.5%20L167.2%2099.2Z%22%20fill%3D%22url(%23pp0m)%22%2F%3E%3Cpath%20d%3D%22M87.6%20121%20L92.3%2080.4%20L117.2%20100.7Z%22%20fill%3D%22%239aa4b8%22%20opacity%3D%22.55%22%2F%3E%3Cpath%20d%3D%22M212.4%20121%20L207.7%2080.4%20L182.8%20100.7Z%22%20fill%3D%22%239aa4b8%22%20opacity%3D%22.55%22%2F%3E%3Cellipse%20cx%3D%22150%22%20cy%3D%22160%22%20rx%3D%2278%22%20ry%3D%2267.1%22%20fill%3D%22url(%23pp0m)%22%2F%3E%3Cpath%20d%3D%22M142.2%20174%20L157.8%20174%20L150%20183.4Z%22%20fill%3D%22%239aa4b8%22%2F%3E%3Cpath%20d%3D%22M150%20183.4%20q-9.4%2012.5%20-18.7%203.1%20M150%20183.4%20q9.4%2012.5%2018.7%203.1%22%20stroke%3D%22%23120d0a%22%20stroke-opacity%3D%22.5%22%20stroke-width%3D%222.7%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%3Cg%20stroke%3D%22%23fff%22%20stroke-opacity%3D%22.55%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M126.6%20181.8%20L60.3%20170.9%20M126.6%20188.1%20L62.6%20192.8%22%2F%3E%3Cpath%20d%3D%22M173.4%20181.8%20L239.7%20170.9%20M173.4%20188.1%20L237.4%20192.8%22%2F%3E%3C%2Fg%3E%3Cpath%20d%3D%22M98%20112%20Q150%2096%20202%20112%22%20stroke%3D%22%232c3240%22%20stroke-width%3D%222%22%20fill%3D%22none%22%2F%3E%3Ccircle%20cx%3D%22108%22%20cy%3D%22196%22%20r%3D%223%22%20fill%3D%22%232c3240%22%2F%3E%3Ccircle%20cx%3D%22192%22%20cy%3D%22196%22%20r%3D%223%22%20fill%3D%22%232c3240%22%2F%3E%3Crect%20x%3D%2296%22%20y%3D%22134%22%20width%3D%22108%22%20height%3D%2226%22%20rx%3D%2213%22%20fill%3D%22%23071018%22%2F%3E%3Crect%20x%3D%22102%22%20y%3D%22140%22%20width%3D%2296%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%2358d9eb%22%2F%3E%3Crect%20x%3D%22102%22%20y%3D%22140%22%20width%3D%2296%22%20height%3D%2214%22%20rx%3D%227%22%20fill%3D%22%23bff6ff%22%20opacity%3D%22.5%22%2F%3E%3Crect%20x%3D%220%22%20y%3D%22330%22%20width%3D%22300%22%20height%3D%22120%22%20fill%3D%22%2305080f%22%20opacity%3D%22.55%22%2F%3E%3Ctext%20x%3D%22150%22%20y%3D%22382%22%20text-anchor%3D%22middle%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-weight%3D%22900%22%20font-size%3D%2236%22%20letter-spacing%3D%22-1%22%20fill%3D%22%23fff%22%20textLength%3D%22262%22%20lengthAdjust%3D%22spacingAndGlyphs%22%3E%D0%9A%D0%9E%D0%A2%D0%9E%D0%9C%D0%98%D0%9D%D0%90%D0%A2%D0%9E%D0%A0%3C%2Ftext%3E%3Ctext%20x%3D%22150%22%20y%3D%22420%22%20text-anchor%3D%22middle%22%20font-family%3D%22Inter%2CArial%2Csans-serif%22%20font-weight%3D%22700%22%20font-size%3D%2211.5%22%20letter-spacing%3D%222.4%22%20fill%3D%22%2358d9eb%22%3E%D0%A1%D0%A3%D0%94%D0%9D%D0%AB%D0%99%20%D0%9A%D0%9E%D0%A0%D0%9C%3C%2Ftext%3E%3C%2Fsvg%3E" alt="">
+        </div>
+        <div class="card points">
+          <span class="t-label muted">Как получать баллы</span>
+          <div class="row"><span class="t-body">Поставить лайк на рецензию</span><b>+5</b></div>
+          <div class="row"><span class="t-body">Получить лайк на рецензию</span><b>+10</b></div>
+          <div class="row"><span class="t-body">Оценить фильм без рецензии</span><b>+50</b></div>
+          <div class="row"><span class="t-body">Написать рецензию</span><b>+250</b></div>
+          <div class="row"><span class="t-body">Получить лайк автора</span><b class="author">+1000</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Как присоединиться (Benefits со ступенями) -->
+<section class="sec" aria-labelledby="s6">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="t-eyebrow">Как присоединиться</span>
+      <h2 id="s6" class="t-h2">Станьте одним из первых авторов Эхо</h2>
+      <p class="t-lead">Первых авторов мы подключаем лично.</p>
+    </div>
+    <div class="benefits keep stg rv">
+      <div class="card info" style="--i:0"><span class="step">01</span><h3 class="t-ui-h3">Заявка</h3><p class="t-body muted"><span class="lg">Расскажите, кто вы и над какими фильмами работали.</span><span class="sm">Кто вы и над чем работали.</span></p></div>
+      <div class="card info" style="--i:1"><span class="step">02</span><h3 class="t-ui-h3">Подтверждение</h3><p class="t-body muted"><span class="lg">Мы связываемся с вами и оформляем профиль автора.</span><span class="sm">Оформляем профиль автора.</span></p></div>
+      <div class="card info" style="--i:2"><span class="step">03</span><h3 class="t-ui-h3">Первый комментарий</h3><p class="t-body muted"><span class="lg">Помогаем с первым авторским комментарием, дальше вы участвуете когда захотите.</span><span class="sm">Помогаем с первым комментарием.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Landing / Application Form (без формы: заявка на почту до решения вопроса с ПДн) -->
+<section class="sec" id="apply" aria-labelledby="s7">
+  <div class="wrap">
+    <div class="card card-author apply rv">
+      <span class="t-eyebrow">Заявка автора</span>
+      <h2 id="s7" class="t-h2">Расскажите о своём фильме</h2>
+      <p class="t-lead"><span class="lg">Напишите нам на почту, кто вы и над какими фильмами работали. Мы ответим и поможем оформить профиль.</span><span class="sm">Напишите на почту, кто вы и над чем работали.</span></p>
+      <div class="apply-grid">
+        <div class="field">
+          <span class="label">В письме укажите</span>
+          <ul>
+            <li>имя и специальность</li>
+            <li>фильмы: названия или ссылки</li>
+            <li>как с вами удобнее связаться</li>
+          </ul>
+        </div>
+        <div class="field">
+          <span class="label" id="mailL">Почта для заявок</span>
+          <a class="input mail" href="mailto:support@echomovies.ru" data-copy="support@echomovies.ru" aria-describedby="mailH"><span>support@echomovies.ru</span><svg class="ic"><use href="#i-copy"/></svg></a>
+          <span class="helper" id="mailH">Нажмите, чтобы написать или скопировать адрес</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Landing / FAQ -->
+<section class="sec" aria-labelledby="s8">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="t-eyebrow">Что важно знать</span>
+      <h2 id="s8" class="t-h2">Ответы на вопросы, которые обычно задают авторы</h2>
+    </div>
+    <div class="faq rv">
+      <div class="faq-item open"><button class="faq-q" type="button" aria-expanded="true"><span>Нужно ли отвечать на рецензии?</span><svg class="ic"><use href="#i-plus"/></svg></button><div class="faq-a"><div><p class="t-body"><span class="lg">Нет. Авторский комментарий к фильму и лайки на рецензиях — по желанию. Вы участвуете тогда, когда вам есть что сказать.</span><span class="sm">Нет. Комментарии и лайки — по желанию.</span></p></div></div></div>
+      <div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>Что, если рецензии будут негативными?</span><svg class="ic"><use href="#i-plus"/></svg></button><div class="faq-a"><div><p class="t-body"><span class="lg">Конструктивная критика так же полезна, как и похвала, поэтому негативные рецензии проходят модерацию наравне с положительными. Публикуются осмысленные рецензии, а не обязательно комплиментарные. Оскорбления, мат, реклама и пустые отзывы модерацию не проходят.</span><span class="sm">Критика публикуется наравне с похвалой. Не проходят только оскорбления, реклама и пустые отзывы.</span></p></div></div></div>
+      <div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>Как подтверждается, что я автор фильма?</span><svg class="ic"><use href="#i-plus"/></svg></button><div class="faq-a"><div><p class="t-body">После заявки мы свяжемся с вами и поможем оформить профиль автора.</p></div></div></div>
+      <div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>Сколько времени это займёт?</span><svg class="ic"><use href="#i-plus"/></svg></button><div class="faq-a"><div><p class="t-body"><span class="lg">Мы рассматриваем заявки и связываемся с авторами в течение дня. Профиль и первый комментарий поможем оформить сами.</span><span class="sm">Отвечаем в течение дня и помогаем с профилем.</span></p></div></div></div>
+      <div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>Моего фильма нет в каталоге. Что делать?</span><svg class="ic"><use href="#i-plus"/></svg></button><div class="faq-a"><div><p class="t-body">Укажите его в письме. Мы проверим, можно ли добавить фильм на платформу.</p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Landing / Final CTA -->
+<section class="sec final" aria-labelledby="s9">
+  <div class="wrap">
+    <span class="bgword" aria-hidden="true">Эхо</span>
+    <h2 id="s9" class="t-h2">Смотри внимательнее. Говори точнее.</h2>
+    <a class="btn btn-author btn-l" href="#apply" style="position:relative">Оставить заявку автора<svg class="ic"><use href="#i-arrow"/></svg></a>
+    <p class="contact">Остались вопросы? Напишите нам: <a href="mailto:support@echomovies.ru" data-copy="support@echomovies.ru">support@echomovies.ru</a></p>
+  </div>
+</section>
+</main>
+
+<!-- Landing / Footer -->
+<footer class="foot">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Эхо — в начало"><span class="logo-tile"><svg viewBox="8 8 40 40" aria-hidden="true"><ellipse cx="21" cy="26" rx="7" ry="10" transform="rotate(-28 21 26)" fill="none" stroke="#0e1016" stroke-width="2.5"/><ellipse cx="35" cy="26" rx="7" ry="10" transform="rotate(28 35 26)" fill="none" stroke="#0e1016" stroke-width="2.5"/><rect x="24.5" y="17" width="7" height="24" rx="3.5" fill="#0e1016"/></svg></span><b>Эхо</b></a>
+    <div class="meta"><span class="t-caption muted">support@echomovies.ru · © Эхо, 2026</span><span class="t-caption faint">Все фильмы, люди и события на странице вымышлены</span></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><svg class="ic"><use href="#i-check"/></svg><span>Адрес скопирован</span></div>
+
+<script>
+(function(){
+  var d=document, R=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  d.documentElement.classList.add('js');
+
+  // Появление блоков + счёт чисел
+  function fmt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,' ');}
+  function count(el){var t=+el.getAttribute('data-count'); el.textContent=fmt(t); if(getComputedStyle(el).display==='inline') el.style.display='inline-block'; el.style.minWidth=el.getBoundingClientRect().width+'px'; if(R) return; var s=performance.now(),D=900;
+    (function f(now){var p=Math.min(1,(now-s)/D),e=1-Math.pow(1-p,3); el.textContent=fmt(Math.round(t*e)); if(p<1) requestAnimationFrame(f);})(s);}
+  var rv=d.querySelectorAll('.rv');
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting) return; var el=e.target; el.classList.add('in'); io.unobserve(el);
+      el.querySelectorAll('[data-count]').forEach(count); if(el.id==='lab') setTimeout(function(){el.classList.add('dim');},R?0:700); if(el.querySelector('#typed')) type();});},{threshold:.15,rootMargin:'0px 0px -40px 0px'});
+    rv.forEach(function(el){io.observe(el);});
+  } else rv.forEach(function(el){el.classList.add('in');});
+
+  // Печать авторского комментария (высота зарезервирована скрытой копией)
+  var tp=d.getElementById('typed'), typedOnce=false;
+  function type(){ if(!tp||typedOnce) return; typedOnce=true; var full=tp.querySelector('.ghost').textContent, live=tp.querySelector('.live');
+    if(R){live.textContent=full; tp.classList.add('done'); return;}
+    var i=0; (function step(){ i=Math.min(full.length,i+3); live.textContent=full.slice(0,i); if(i<full.length) setTimeout(step,16); else tp.classList.add('done');})(); }
+  if(!('IntersectionObserver' in window)){ type(); var lb=d.getElementById('lab'); if(lb) lb.classList.add('dim'); }
+
+  // Лайк автора: на телефоне по нажатию
+  d.querySelectorAll('.al').forEach(function(a){a.addEventListener('click',function(e){e.stopPropagation(); a.classList.toggle('on');});});
+  d.addEventListener('click',function(){d.querySelectorAll('.al.on').forEach(function(a){a.classList.remove('on');});});
+
+  // Блок оценки справа держит высоту свёрнутой рецензии и не растёт при раскрытии
+  var rvCard=d.querySelector('#feedback .review'), sumCard=d.querySelector('#feedback .summary'), rcx=d.getElementById('rcx');
+  function twoCols(){return getComputedStyle(rvCard.parentNode).gridTemplateColumns.split(' ').length>1;}
+  var clipEl=rvCard&&rvCard.querySelector('.clip'), stale=false;
+  function syncH(){ if(!rvCard||!sumCard) return; if(rcx&&rcx.checked){stale=true; return;} stale=false;
+    var tr=clipEl.style.transition; clipEl.style.transition='none';
+    rvCard.style.removeProperty('--ch'); sumCard.style.height='';
+    if(twoCols()){
+      var diff=sumCard.offsetHeight-rvCard.offsetHeight;
+      if(diff>0) rvCard.style.setProperty('--ch',Math.min(clipEl.scrollHeight,120+diff)+'px');
+      sumCard.style.height=Math.max(rvCard.offsetHeight,sumCard.offsetHeight)+'px';
+    }
+    void clipEl.offsetHeight; clipEl.style.transition=tr; }
+  window.addEventListener('load',syncH); window.addEventListener('resize',syncH);
+  if(d.fonts&&d.fonts.ready) d.fonts.ready.then(syncH); syncH();
+  if(rcx) rcx.addEventListener('change',function(){ if(!rcx.checked&&stale) clipEl.addEventListener('transitionend',function f(){clipEl.removeEventListener('transitionend',f); syncH();}); });
+
+  // Ползунки: заливка и итог (меняется только «Впечатление»)
+  function fill(i){i.style.setProperty('--f',((i.value-i.min)/(i.max-i.min)*100)+'%');}
+  d.querySelectorAll('input[type=range]').forEach(fill);
+  var imp=d.getElementById('imp'), iv=d.getElementById('impV'), tot=d.getElementById('total');
+  var q=[9,9,10,9];
+  function mult(v){return 0.65+0.035*(v-1);}
+  function calc(){var quality=q.reduce(function(a,c){return a+c;},0)/q.length*10; return Math.min(100,Math.round(quality*mult(+imp.value)));}
+  var mEl=d.getElementById('mult');
+  var cur=+tot.textContent, raf;
+  function animTo(t){ cancelAnimationFrame(raf); if(R){cur=t; tot.textContent=t; return;} var from=cur, s=performance.now(), D=350;
+    tot.classList.add('bump'); setTimeout(function(){tot.classList.remove('bump');},250);
+    (function f(now){var p=Math.min(1,(now-s)/D); cur=Math.round(from+(t-from)*(1-Math.pow(1-p,3))); tot.textContent=cur; if(p<1) raf=requestAnimationFrame(f);})(s); }
+  if(imp){ imp.addEventListener('input',function(){fill(imp); iv.textContent=imp.value; if(mEl) mEl.textContent='×'+mult(+imp.value).toFixed(2).replace('.',','); animTo(calc()); imp.setAttribute('aria-valuetext',imp.value+' из 10');}); }
+
+  // Подсказки: касание на телефоне
+  d.querySelectorAll('.help').forEach(function(h){h.addEventListener('click',function(e){e.stopPropagation(); var on=!h.classList.contains('on'); d.querySelectorAll('.help.on').forEach(function(x){x.classList.remove('on');}); h.classList.toggle('on',on);});});
+  d.addEventListener('click',function(){d.querySelectorAll('.help.on').forEach(function(x){x.classList.remove('on');});});
+
+  // FAQ: открыт один вопрос за раз
+  var items=d.querySelectorAll('.faq-item');
+  items.forEach(function(it){it.addEventListener('click',function(){var open=!it.classList.contains('open');
+    items.forEach(function(o){o.classList.remove('open'); o.querySelector('.faq-q').setAttribute('aria-expanded','false');});
+    if(open){it.classList.add('open'); it.querySelector('.faq-q').setAttribute('aria-expanded','true');}});});
+
+  // Копирование почты
+  var toast=d.getElementById('toast'), tm;
+  function done(){toast.classList.add('show'); clearTimeout(tm); tm=setTimeout(function(){toast.classList.remove('show');},1800);
+    var h=d.getElementById('mailH'); if(h){h.textContent='Адрес скопирован'; h.classList.add('ok'); setTimeout(function(){h.textContent='Нажмите, чтобы написать или скопировать адрес'; h.classList.remove('ok');},1800);}}
+  function fallback(t){var a=d.createElement('textarea'); a.value=t; a.style.position='fixed'; a.style.opacity='0'; d.body.appendChild(a); a.select(); try{d.execCommand('copy');}catch(e){} d.body.removeChild(a); done();}
+  d.querySelectorAll('[data-copy]').forEach(function(el){el.addEventListener('click',function(e){e.preventDefault(); var t=el.getAttribute('data-copy');
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){fallback(t);});} else fallback(t);});});
+})();
+</script>
+</body>
+</html>
+
+</body></html>
