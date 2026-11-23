@@ -42,9 +42,52 @@
 
 ## Материалы
 
-- [Релиз и текущая версия приложения](https://github.com/zuevvdele/EchoTheProject/blob/d6c2f229ed55f743a48ff323d78455cecd0eeaa7/docs/RELEASE_V11_2_RU.md)
+Документы включают требования, планы и результаты выполненных работ. Часть планов содержит первоначальные даты и предыдущие версии интерфейса; состояние текущей сборки зафиксировано в этом отчёте и материалах релиза v11.2.1.
+
+### Сайт и код
+
+- [Эхо — сайт с доступом по бета-приглашению](https://echomovies.ru/)
+- [Публичный лендинг для авторов кино](https://authors.echomovies.ru/)
+- [EchoWeb — интерфейс и wiki проекта](https://github.com/SaTayouNy/EchoWeb)
+- [EchoTheProject — код опубликованной версии](https://github.com/zuevvdele/EchoTheProject/tree/d6c2f229ed55f743a48ff323d78455cecd0eeaa7)
+
+### Продукт и дизайн
+
+- [Требования к продукту](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/03-product/requirements.md)
+- [Система оценок и статусов](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/03-product/ratings-and-statuses.md)
+- [UX-стратегия](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/03-product/ux-strategy.md)
+- [Артефакты проектирования: структура, навигация и пользовательские пути](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/03-product/artifacts.md)
+- [UI-kit Эхо в Figma](https://www.figma.com/design/AFDG6j3oxl9tWrEc3RUx4j/UI-kit-Echo?node-id=21-2)
+
+### Исследования и киностудия
+
+- [Обратная связь от целевой аудитории](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/01-initiation/audience-feedback.md)
+- [План исследования системы оценок](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/09-research/focus-groups-rating.md)
+- [Анкета для фокус-групп](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/09-research/focus-groups-form.md)
+- [Комплект ведущего от киностудии](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/09-research/focus-groups-kit.md)
+- [SWOT направления короткометражных фильмов](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/09-research/swot-short-films.md)
+
+### Бета-тест, авторы и сообщество
+
+- [План закрытого бета-теста](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/beta-test/README.md)
+- [Правила персонального бета-доступа](https://github.com/zuevvdele/EchoTheProject/blob/d6c2f229ed55f743a48ff323d78455cecd0eeaa7/docs/BETA_ACCESS_RU.md)
+- [Форматы сотрудничества с авторами и студиями](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/08-partners/README.md)
+- [Программа развития сообщества](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/06-community/social-program.md)
+- [Предложения функций от партнёров](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/08-partners/feature-cards.md)
+
+### Метрики и аналитика
+
+- [Бизнес-модель и цепочка метрик](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/05-business/business-model.md)
+- [План продуктовой аналитики](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/05-business/analytics-plan.md)
+- [Контракт реализованного сбора событий](https://github.com/zuevvdele/EchoTheProject/blob/d6c2f229ed55f743a48ff323d78455cecd0eeaa7/docs/ANALYTICS_API_RU.md)
+
+### Релиз и техническая проверка
+
+- [Релиз v11.2 и дополнение v11.2.1](https://github.com/zuevvdele/EchoTheProject/blob/d6c2f229ed55f743a48ff323d78455cecd0eeaa7/docs/RELEASE_V11_2_RU.md)
 - [Результаты технических проверок](https://github.com/zuevvdele/EchoTheProject/blob/d6c2f229ed55f743a48ff323d78455cecd0eeaa7/docs/VALIDATION_V11_2_RU.md)
-- [План исследования со студией](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/09-research/focus-groups-rating.md)
+- [Действующий контракт интеграции сайта и API](https://github.com/zuevvdele/EchoTheProject/blob/d6c2f229ed55f743a48ff323d78455cecd0eeaa7/frontend/API_LIVE.md)
+- [Регламент тестирования](https://github.com/SaTayouNy/EchoWeb/blob/main/docs/04-development/testing.md)
+- [Скрипт автоматической выкладки](https://github.com/zuevvdele/EchoTheProject/blob/d6c2f229ed55f743a48ff323d78455cecd0eeaa7/ops/hosting/deploy.sh)
 
 ## Дальнейшая реализация
 
